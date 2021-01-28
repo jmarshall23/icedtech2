@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dog.qc">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="ogre.qc">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="soldier.qc">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="zombie.qc">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="knight.qc">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="demon.qc">
+      <Filter>Scripts</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="generated\generated_dog.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="generated\generated_ogre.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="generated\generated_soldier.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="generated\generated_zombie.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="generated\generated_knight.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="generated\generated_demon.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="generated\generated_dog.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\generated_ogre.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\generated_soldier.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\generated_zombie.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="superscript.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\save_func.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\generated_knight.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\generated_demon.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\anim_public.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

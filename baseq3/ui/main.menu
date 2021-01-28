@@ -1,0 +1,214 @@
+#include "ui/menudef.h"
+
+{
+	assetGlobalDef {
+		font "fonts/normal" 16				// font
+		smallFont "fonts/smallFont" 12			// font
+		bigFont "fonts/bigFont" 24			// font
+		cursor "ui/assets/3_cursor3"			// cursor	
+		gradientBar "ui/assets/gradientbar2.tga"	// gradient bar
+		itemFocusSound "sound/misc/menu2.wav"	
+					// sound for item getting focus (via keyboard or mouse )
+
+		fadeClamp 1.0				// sets the fadeup alpha
+		fadeCycle 1					// how often fade happens in milliseconds
+		fadeAmount 0.1				// amount to adjust alpha per cycle
+		
+		shadowColor 0.1 0.1 0.1 0.25			// shadow color
+		}
+							   
+
+
+
+
+menuDef {
+	name "main"
+	background "ui/textures/mainback.tga"		// Spinning Circle Background
+	fullScreen MENU_TRUE				
+	rect 0 0 1920 1080				// Size and position of the menu
+	visible MENU_TRUE				// Visible on open
+	focusColor .9 .85 1 .8			// Menu focus color for text and items
+	soundloop ""
+					
+	onOpen { 
+		setitemcolor fadebox backcolor 0 0 0 1 ; 
+		playlooped "sound/music/l_theme.wav" ;
+		fadeout fadebox ;
+	 //  	play "sound/misc/tim_pump.wav" ; 
+		uiScript stopRefresh ;
+		}
+		
+	onESC { mainEscapeHandler; }
+	
+
+////////// GAMETYPE //////////////////////////////////////////////////////// 
+
+	//	SINGLEPLAYER	// 
+
+
+	itemDef {
+		name play
+		text "SINGEPLAYER"
+		type 1
+		style 0	
+		textstyle 6
+		rect 500 160 84 14 
+		textalign 0
+		textscale .233		
+		textalignx 2
+		textaligny 14
+		forecolor .9 .9 .9 1
+		visible 1
+		textfont UI_FONT_NORMAL
+		mouseEnter {  fadein message_accept }
+		action { play "sound/misc/zap.wav" ; 
+		close main ; 
+		map start ; }
+		}
+
+	itemDef {
+      	name playselection
+      	text "MULTIPLAYER"
+		type 1
+		style 0	
+		textstyle 6
+		rect 500 180 84 14 
+		textalign 0
+		textscale .2308		
+		textalignx 0
+		textaligny 14
+		textfont UI_FONT_NORMAL
+		forecolor .9 .9 .9 1
+		visible 1  
+		mouseEnter {
+		fadein message_accept}
+		action {play "sound/misc/zap.wav";
+		open multi_popmenu}
+//		action { uiScript startMultiplayer }
+    	}
+
+
+	itemDef {
+		name loadgame
+		text "LOAD GAME"
+		type 1
+		style 0	
+		textstyle 6
+		rect 500 200 72 14 
+		textalign 0
+		textscale .2308		
+		textalignx 0
+		textaligny 14
+		forecolor .9 .9 .9 .9
+		visible 1 
+		textfont UI_FONT_NORMAL
+		mouseEnter { fadein message_accept }
+		action {loadautosave; }
+    	}
+	
+
+
+
+
+
+//	OPTIONS		// 
+
+
+itemDef {
+		name options
+		text "OPTIONS"
+		type 1
+		style 0	
+		textstyle 6
+		rect 500 220 56 14 
+		textalign 0
+		textscale .2308		
+		textalignx 2
+		textaligny 14
+		forecolor .9 .9 .9 1
+		visible 1
+		textfont UI_FONT_NORMAL 
+		mouseEnter {fadein message_accept }
+		action {play "sound/misc/zap.wav" ; 
+		close main ; 
+		open setup_menu ;
+		open control_menu
+		} 
+    }
+
+
+
+   
+
+itemDef {
+	name credits
+	text "CREDITS"
+		type 1
+		style 0	
+		textstyle 6
+		rect 500 240 52 14 
+		textalign 0
+		textscale .2308		
+		textalignx 0
+		textaligny 14
+		textfont UI_FONT_NORMAL
+		forecolor .9 .9 .9 .9
+		visible 1 
+	mouseEnter { fadein message_accept }
+	action {	close main; open credit} 
+   	}
+
+
+//	QUIT	//
+
+
+
+itemDef {
+		name quit
+		text "QUIT"
+		type 1
+		style 0	
+		textstyle 6
+		rect 500 260 32 14 
+		textalign 0
+		textscale .2308		
+		textalignx 0
+		textaligny 14
+		textfont UI_FONT_NORMAL
+		forecolor .9 .9 .9 .9
+		visible 1 
+		mouseEnter {
+		fadein message_accept}
+		action {play "sound/misc/zap.wav";
+		open quit_popmenu}
+
+}
+
+itemDef {
+      	name copyright
+      	text "Powered by the Darklight Engine (c) 2021 BlackenMace Studios LTD"
+      	style 0
+      	textscale .15
+      	rect 10 475 360 40
+      	textalign 1	
+      	textaligny 0
+      	textalignx 20 
+      	forecolor .7 .7 .7 .9      
+		visible 1 
+      	decoration 
+	}
+
+
+
+itemDef {
+      	name fadebox					// Box for fading in menus
+      	style WINDOW_STYLE_FILLED
+ 		background "ui/assets/fadebox.tga"
+		forecolor 0 0 0 1
+		backcolor 0 0 0 1
+		rect 0 0 640 480
+      	visible 1 
+		decoration
+    	}
+
+}

@@ -1,0 +1,70 @@
+#include "ui/menudef.h"
+
+{
+	assetGlobalDef {
+		font "fonts/normal" 16				// font
+		smallFont "fonts/smallFont" 12			// font
+		bigFont "fonts/bigFont" 24			// font
+		cursor "ui/assets/3_cursor3"			// cursor	
+		gradientBar "ui/assets/gradientbar2.tga"	// gradient bar
+		itemFocusSound "sound/misc/menu2.wav"	
+					// sound for item getting focus (via keyboard or mouse )
+
+		fadeClamp 1.0				// sets the fadeup alpha
+		fadeCycle 1					// how often fade happens in milliseconds
+		fadeAmount 0.1				// amount to adjust alpha per cycle
+		
+		shadowColor 0.1 0.1 0.1 0.25			// shadow color
+		}
+							   
+
+
+
+
+menuDef {
+	name "death"
+	background "ui/textures/diedback.tga"		// Spinning Circle Background
+	fullScreen MENU_TRUE				
+	rect 0 0 1920 1080				// Size and position of the menu
+	visible MENU_TRUE				// Visible on open
+	focusColor .9 .85 1 .8			// Menu focus color for text and items
+	soundloop ""
+
+	itemDef {
+		name play
+		text "LOAD CHECKPOINT"
+		type 1
+		style 0	
+		textstyle 6
+		rect 260 360 84 14 
+		textalign 0
+		textscale  .2308		
+		textalignx 2
+		textaligny 14
+		forecolor .9 .9 .9 1
+		visible 1
+		textfont UI_FONT_NORMAL
+		mouseEnter {  fadein message_accept }
+		action {loadautosave; }
+		}
+
+	itemDef {
+      	name playselection
+      	text "EXIT TO MAINMENU"
+		type 1
+		style 0	
+		textstyle 6
+		rect 260 380 84 14 
+		textalign 0
+		textscale .2308		
+		textalignx 0
+		textaligny 14
+		textfont UI_FONT_NORMAL
+		forecolor .9 .9 .9 1
+		visible 1  
+		mouseEnter {
+		fadein message_accept}
+		action {disconnect; }
+    	}
+
+}

@@ -13,11 +13,13 @@ Long story:
 difficult to work with, lots of singleplayer functionality was missing, (like keys) etc. Return to Castle Wolfenstein GPL release, didn't really
 help the situation either. That platform was built upon the same complex, AI system that made Quake 3 hard to work with.
 
-	I loved the Quake 3 engine, the engine code was pretty nice and straight forward to work with. However if you can't make a game on it,
-it doesn't matter if the engine was awesome to work with; and that's  what this project is designed to fix. 
+	I loved the Quake 3 engine, the engine code was pretty nice and straight forward to work with.
+However if you can't make a game on it, it doesn't matter if the engine was awesome to work with; 
+and that's what this project is designed to fix. 
 
-	I ported the Quake 2 native AI to Quake 3, I created a pipeline to  import monster .qc files from Quake 1 into Quake 3 via a straight forward 
-conversion pipeline called "superscript". There are some unique things to know about qc in superscript.
+	I ported the Quake 2 native AI to Quake 3, I created a pipeline to  import monster .qc files from 
+Quake 1 into Quake 3 via a straight forward conversion pipeline called "superscript". 
+There are some unique things to know about qc in superscript.
 
 Superscript:
 	Superscript is consists of qc files, a C# executable and a C++ static library.

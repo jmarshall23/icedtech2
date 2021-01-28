@@ -6,20 +6,27 @@ Installation:
 	2) Copy the retail .pak files from Quake 1 into baseq3 folder. 
 
 Introduction:
-	Darklight 2.0 is a idTech 3 project that is designed to create a simple and easy to use platform for people to create new singleplayer  games on.
+	Darklight 2.0 is a idTech 3 project that is designed to create
+a simple and easy to use platform for people to create new singleplayer 
+games on.
 
 Long story:
-	The Quake 3 engine was a difficult engine to make a new game on. The ai code for Quake 3 was heavily complex, the state machines were
-difficult to work with, lots of singleplayer functionality was missing, (like keys) etc. Return to Castle Wolfenstein GPL release, didn't really
-help the situation either. That platform was built upon the same complex, AI system that made Quake 3 hard to work with.
+	The Quake 3 engine was a difficult engine to make a new game on.
+The ai code for Quake 3 was heavily complex, the state machines were
+difficult to work with, lots of singleplayer functionality was missing,
+(like keys) etc. Return to Castle Wolfenstein GPL release, didn't really
+help the situation either. That platform was built upon the same complex,
+AI system that made Quake 3 hard to work with.
 
-	I loved the Quake 3 engine, the engine code was pretty nice and straight forward to work with.
-However if you can't make a game on it, it doesn't matter if the engine was awesome to work with; 
-and that's what this project is designed to fix. 
+	I loved the Quake 3 engine, the engine code was pretty nice and
+straight forward to work with. However if you can't make a game on it,
+it doesn't matter if the engine was awesome to work with; and that's 
+what this project is designed to fix. 
 
-	I ported the Quake 2 native AI to Quake 3, I created a pipeline to  import monster .qc files from 
-Quake 1 into Quake 3 via a straight forward conversion pipeline called "superscript". 
-There are some unique things to know about qc in superscript.
+	I ported the Quake 2 native AI to Quake 3, I created a pipeline to 
+import monster .qc files from Quake 1 into Quake 3 via a straight forward 
+conversion pipeline called "superscript". There are some unique things
+to know about qc in superscript.
 
 Superscript:
 	Superscript is consists of qc files, a C# executable and a C++ static library.
@@ -39,7 +46,7 @@ super script:
 	   are defined as idVec3_t(1, 1, 1).
 	3) SuperScript is mostly designed to let you design a "ai/animation blueprint", more complex
 	   functionality should be created in the .c files. 
-	   
+
 Item Code:
 	The entire item system in Quake 3 has been reworked(no more bg_misc.c), as a result please take a look at the new code.
 

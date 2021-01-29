@@ -77,6 +77,44 @@ void CG_AdjustFrom640(float* x, float* y, float* w, float* h) {
 }
 
 /*
+===============
+CG_DrawChar
+
+Coordinates and size in 640*480 virtual screen size
+===============
+*/
+void CG_DrawChar( int x, int y, int width, int height, int ch ) {
+	int row, col;
+	float frow, fcol;
+	float size;
+	float	ax, ay, aw, ah;
+
+	ch &= 255;
+
+	if ( ch == ' ' ) {
+		return;
+	}
+
+	ax = x;
+	ay = y;
+	aw = width;
+	ah = height;
+	CG_AdjustFrom640( &ax, &ay, &aw, &ah );
+
+	row = ch>>4;
+	col = ch&15;
+
+	frow = row*0.0625;
+	fcol = col*0.0625;
+	size = 0.0625;
+
+	trap_R_DrawStretchPic( ax, ay, aw, ah,
+					   fcol, frow, 
+					   fcol + size, frow + size, 
+					   cgs.media.charsetShader );
+}
+
+/*
 ================
 CG_DrawPic
 
@@ -312,6 +350,157 @@ static void CG_DrawCenterString(void) {
 }
 
 
+/*
+==================
+CG_DrawSnapshot
+==================
+*/
+static float CG_DrawSnapshot( float y ) {
+	char		*s;
+	int			w;
+
+	s = va( "time:%i snap:%i cmd:%i", cg.snap->serverTime, 
+		cg.latestSnapshotNum, cgs.serverCommandSequence );
+	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+
+	CG_DrawBigString( 635 - w, y + 2, s, 1.0F);
+
+	return y + BIGCHAR_HEIGHT + 4;
+}
+
+
+/*
+==================
+CG_DrawStringExt
+
+Draws a multi-colored string with a drop shadow, optionally forcing
+to a fixed color.
+
+Coordinates are at 640 by 480 virtual resolution
+==================
+*/
+void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, 
+		qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars ) {
+	vec4_t		color;
+	const char	*s;
+	int			xx;
+	int			cnt;
+
+	if (maxChars <= 0)
+		maxChars = 32767; // do them all!
+
+	// draw the drop shadow
+	if (shadow) {
+		color[0] = color[1] = color[2] = 0;
+		color[3] = setColor[3];
+		trap_R_SetColor( color );
+		s = string;
+		xx = x;
+		cnt = 0;
+		while ( *s && cnt < maxChars) {
+			if ( Q_IsColorString( s ) ) {
+				s += 2;
+				continue;
+			}
+			CG_DrawChar( xx + 2, y + 2, charWidth, charHeight, *s );
+			cnt++;
+			xx += charWidth;
+			s++;
+		}
+	}
+
+	// draw the colored text
+	s = string;
+	xx = x;
+	cnt = 0;
+	trap_R_SetColor( setColor );
+	while ( *s && cnt < maxChars) {
+		if ( Q_IsColorString( s ) ) {
+			if ( !forceColor ) {
+				memcpy( color, g_color_table[ColorIndex(*(s+1))], sizeof( color ) );
+				color[3] = setColor[3];
+				trap_R_SetColor( color );
+			}
+			s += 2;
+			continue;
+		}
+		CG_DrawChar( xx, y, charWidth, charHeight, *s );
+		xx += charWidth;
+		cnt++;
+		s++;
+	}
+	trap_R_SetColor( NULL );
+}
+
+void CG_DrawBigString( int x, int y, const char *s, float alpha ) {
+	float	color[4];
+
+	color[0] = color[1] = color[2] = 1.0;
+	color[3] = alpha;
+	CG_DrawStringExt( x, y, s, color, qfalse, qtrue, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0 );
+}
+
+/*
+==================
+CG_DrawFPS
+==================
+*/
+#define	FPS_FRAMES	4
+static float CG_DrawFPS( float y ) {
+	char		*s;
+	int			w;
+	static int	previousTimes[FPS_FRAMES];
+	static int	index;
+	int		i, total;
+	int		fps;
+	static	int	previous;
+	int		t, frameTime;
+
+	// don't use serverTime, because that will be drifting to
+	// correct for internet lag changes, timescales, timedemos, etc
+	t = trap_Milliseconds();
+	frameTime = t - previous;
+	previous = t;
+
+	previousTimes[index % FPS_FRAMES] = frameTime;
+	index++;
+	if ( index > FPS_FRAMES ) {
+		// average multiple frames together to smooth changes out a bit
+		total = 0;
+		for ( i = 0 ; i < FPS_FRAMES ; i++ ) {
+			total += previousTimes[i];
+		}
+		if ( !total ) {
+			total = 1;
+		}
+		fps = 1000 * FPS_FRAMES / total;
+
+		s = va( "%ifps", fps );
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+
+		CG_DrawBigString( 635 - w, y + 2, s, 1.0F);
+	}
+
+	return y + BIGCHAR_HEIGHT + 4;
+}
+
+/*
+=====================
+CG_DrawUpperRight
+=====================
+*/
+static void CG_DrawUpperRight( void ) {
+	float	y;
+
+	y = 0;
+
+	if ( cg_drawSnapshot.integer ) {
+		y = CG_DrawSnapshot( y );
+	}
+	if ( cg_drawFPS.integer ) {
+		y = CG_DrawFPS( y );
+	}
+}
 
 void CG_DrawStatusBar(void) {
 	int			color;
@@ -433,4 +622,6 @@ void CG_DrawStatusBar(void) {
 	}
 
 	CG_DrawCenterString();
+
+	CG_DrawUpperRight();
 }

@@ -47,6 +47,9 @@ super script:
 	3) SuperScript is mostly designed to let you design a "ai/animation blueprint", more complex
 	   functionality should be created in the .c files. 
 
+Item Code:
+	The entire item system in Quake 3 has been reworked(no more bg_misc.c), as a result please take a look at the new code.
+
 Quake Shareware Content:
 	Darklight 2.0 as a "example" project uses converted Quake 1 shareware content. This is copyrighted
 material. Please take a look at assets_readme.txt and quake_copyright_assets.pk3. As a result, you will need 

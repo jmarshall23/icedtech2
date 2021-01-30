@@ -13,7 +13,7 @@ FX_InitGibs
 */
 void FX_InitGibs(void) {
 	for (int i = 0; i < MAX_GIB_MODELS; i++) {
-		gibModels[i] = trap_R_RegisterModel(va("models/gibs/gib%d.md3", i));
+		gibModels[i] = engine->renderer->RegisterModel(va("models/gibs/gib%d.md3", i));
 	}
 }
 

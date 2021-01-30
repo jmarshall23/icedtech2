@@ -171,7 +171,7 @@ void CG_ClearParticles(void) {
 		int j;
 
 		for (j = 0; j < shaderAnimCounts[i]; j++) {
-			shaderAnims[i][j] = trap_R_RegisterShader(va("%s%i", shaderAnimNames[i], j + 1));
+			shaderAnims[i][j] = engine->renderer->RegisterShader(va("%s%i", shaderAnimNames[i], j + 1));
 		}
 	}
 	numShaderAnims = i;
@@ -758,7 +758,7 @@ void CG_AddParticleToScene(cparticle_t* p, vec3_t org, float alpha) {
 		// ydnar: add dlight if necessary
 		if (p->type == P_DLIGHT_ANIM) {
 			// fixme: support arbitrary color
-			trap_R_AddLightToScene(org, 320,   //%	1.5 * (width > height ? width : height),
+			engine->renderer->AddLightToScene(org, 320,   //%	1.5 * (width > height ? width : height),
 				1.0, 0.95, 0.85, 0);
 		}
 
@@ -856,10 +856,10 @@ void CG_AddParticleToScene(cparticle_t* p, vec3_t org, float alpha) {
 	}
 
 	if (p->type == P_WEATHER || p->type == P_WEATHER_TURBULENT || p->type == P_WEATHER_FLURRY) {
-		trap_R_AddPolyToScene(p->pshader, 3, TRIverts);
+		engine->renderer->AddPolyToScene(p->pshader, 3, TRIverts, 1);
 	}
 	else {
-		trap_R_AddPolyToScene(p->pshader, 4, verts);
+		engine->renderer->AddPolyToScene(p->pshader, 4, verts, 1);
 	}
 
 }

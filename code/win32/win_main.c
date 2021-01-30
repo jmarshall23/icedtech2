@@ -546,8 +546,7 @@ extern char		*FS_BuildOSPath( const char *base, const char *game, const char *qp
 // fqpath param added 7/20/02 by T.Ray - Sys_LoadDll is only called in vm.c at this time
 // fqpath will be empty if dll not loaded, otherwise will hold fully qualified path of dll module loaded
 // fqpath buffersize must be at least MAX_QPATH+1 bytes long
-void * QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoint)(int, ...),
-				  int (QDECL *systemcalls)(int, ...) ) {
+void * QDECL Sys_LoadDll( const char *name, void *(QDECL **entryPoint)(int apiVersion, void *engineApi) ) {
 	static int	lastWarning = 0;
 	HINSTANCE	libHandle;
 	void	(QDECL *dllEntry)( int (QDECL *syscallptr)(int, ...) );
@@ -561,32 +560,10 @@ void * QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoi
 #endif
 	char	filename[MAX_QPATH];
 
-	*fqpath = 0 ;		// added 7/20/02 by T.Ray
-
 #ifdef _DEBUG
 	Com_sprintf( filename, sizeof( filename ), "%sx64_debug.dll", name );
 #else
 	Com_sprintf(filename, sizeof(filename), "%sx64.dll", name);
-#endif
-
-#ifdef NDEBUG
-	timestamp = Sys_Milliseconds();
-	if( ((timestamp - lastWarning) > (5 * 60000)) && !Cvar_VariableIntegerValue( "dedicated" )
-		&& !Cvar_VariableIntegerValue( "com_blindlyLoadDLLs" ) ) {
-		if (FS_FileExists(filename)) {
-			lastWarning = timestamp;
-			ret = MessageBoxEx( NULL, "You are about to load a .DLL executable that\n"
-				  "has not been verified for use with Quake III Arena.\n"
-				  "This type of file can compromise the security of\n"
-				  "your computer.\n\n"
-				  "Select 'OK' if you choose to load it anyway.",
-				  "Security Warning", MB_OKCANCEL | MB_ICONEXCLAMATION | MB_DEFBUTTON2 | MB_TOPMOST | MB_SETFOREGROUND,
-				  MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) );
-			if( ret != IDOK ) {
-				return NULL;
-			}
-		}
-	}
 #endif
 
 #ifndef NDEBUG
@@ -630,15 +607,12 @@ void * QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoi
 	}
 #endif
 
-	dllEntry = ( void (QDECL *)( int (QDECL *)( int, ... ) ) )GetProcAddress( libHandle, "dllEntry" ); 
-	*entryPoint = (int (QDECL *)(int,...))GetProcAddress( libHandle, "vmMain" );
-	if ( !*entryPoint || !dllEntry ) {
+	*entryPoint = (void *(QDECL *)(int, void *))GetProcAddress( libHandle, "vmMain" );
+	if ( !*entryPoint ) {
 		FreeLibrary( libHandle );
 		return NULL;
 	}
-	dllEntry( systemcalls );
 
-	if ( libHandle ) Q_strncpyz ( fqpath , filename , MAX_QPATH ) ;		// added 7/20/02 by T.Ray
 	return libHandle;
 }
 

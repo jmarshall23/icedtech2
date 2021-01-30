@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 #include "../gameshared/q_shared.h"
-#include "tr_types.h"
+#include "../renderer/tr_public.h"
 #include "../gameshared/bg_public.h"
 #include "cg_public.h"
 
@@ -1486,217 +1486,6 @@ void CG_DrawStatusBar(void);
 
 //===============================================
 
-//
-// system traps
-// These functions are how the cgame communicates with the main game system
-//
-
-// print message on the local console
-void		trap_Print( const char *fmt );
-
-// abort the game
-void		trap_Error( const char *fmt );
-
-// milliseconds should only be used for performance tuning, never
-// for anything game related.  Get time from the CG_DrawActiveFrame parameter
-int			trap_Milliseconds( void );
-
-// console variable interaction
-void		trap_Cvar_Register( vmCvar_t *vmCvar, const char *varName, const char *defaultValue, int flags );
-void		trap_Cvar_Update( vmCvar_t *vmCvar );
-void		trap_Cvar_Set( const char *var_name, const char *value );
-void		trap_Cvar_VariableStringBuffer( const char *var_name, char *buffer, int bufsize );
-
-// ServerCommand and ConsoleCommand parameter access
-int			trap_Argc( void );
-void		trap_Argv( int n, char *buffer, int bufferLength );
-void		trap_Args( char *buffer, int bufferLength );
-
-// filesystem access
-// returns length of file
-int			trap_FS_FOpenFile( const char *qpath, fileHandle_t *f, fsMode_t mode );
-void		trap_FS_Read( void *buffer, int len, fileHandle_t f );
-void		trap_FS_Write( const void *buffer, int len, fileHandle_t f );
-void		trap_FS_FCloseFile( fileHandle_t f );
-int			trap_FS_Seek( fileHandle_t f, long offset, int origin ); // fsOrigin_t
-
-// add commands to the local console as if they were typed in
-// for map changing, etc.  The command is not executed immediately,
-// but will be executed in order the next time console commands
-// are processed
-void		trap_SendConsoleCommand( const char *text );
-
-// register a command name so the console can perform command completion.
-// FIXME: replace this with a normal console command "defineCommand"?
-void		trap_AddCommand( const char *cmdName );
-
-// send a string to the server over the network
-void		trap_SendClientCommand( const char *s );
-
-// force a screen update, only used during gamestate load
-void		trap_UpdateScreen( void );
-
-// model collision
-void		trap_CM_LoadMap( const char *mapname );
-int			trap_CM_NumInlineModels( void );
-clipHandle_t trap_CM_InlineModel( int index );		// 0 = world, 1+ = bmodels
-clipHandle_t trap_CM_TempBoxModel( const vec3_t mins, const vec3_t maxs );
-int			trap_CM_PointContents( const vec3_t p, clipHandle_t model );
-int			trap_CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles );
-void		trap_CM_BoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-					  const vec3_t mins, const vec3_t maxs,
-					  clipHandle_t model, int brushmask );
-void		trap_CM_TransformedBoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-					  const vec3_t mins, const vec3_t maxs,
-					  clipHandle_t model, int brushmask,
-					  const vec3_t origin, const vec3_t angles );
-
-// Returns the projection of a polygon onto the solid brushes in the world
-int			trap_CM_MarkFragments( int numPoints, const vec3_t *points, 
-			const vec3_t projection,
-			int maxPoints, vec3_t pointBuffer,
-			int maxFragments, markFragment_t *fragmentBuffer );
-
-void trap_DrawBigString(int x, int y, const char* s, float alpha);
-
-
-void		trap_R_LoadWorldMap( const char *mapname );
-
-int			trap_R_ModelNumFrames(qhandle_t handle);
-
-qhandle_t trap_GetWorldShader(int index);
-int trap_GetNumWorldShaders(void);
-
-// all media should be registered during level startup to prevent
-// hitches during gameplay
-qhandle_t	trap_R_RegisterModel( const char *name );			// returns rgb axis if not found
-qhandle_t	trap_R_RegisterSkin( const char *name );			// returns all white if not found
-qhandle_t	trap_R_RegisterShader( const char *name );			// returns all white if not found
-qhandle_t	trap_R_RegisterShaderNoMip( const char *name );			// returns all white if not found
-qhandle_t	trap_R_RegisterModelEx(const char* name, const char* _fileName, qhandle_t globalShader);
-// a scene is built up by calls to R_ClearScene and the various R_Add functions.
-// Nothing is drawn until R_RenderScene is called.
-void		trap_R_ClearScene( void );
-void		trap_R_AddRefEntityToScene( const refEntity_t *re );
-
-// polys are intended for simple wall marks, not really for doing
-// significant construction
-void		trap_R_AddPolyToScene( qhandle_t hShader , int numVerts, const polyVert_t *verts );
-void		trap_R_AddPolysToScene( qhandle_t hShader , int numVerts, const polyVert_t *verts, int numPolys );
-void		trap_R_AddLightToScene( const vec3_t org, float intensity, float r, float g, float b, int attenuation);
-void		trap_R_AddSpotLightToScene(const vec3_t org, float intensity, float r, float g, float b, vec3_t lightNormal);
-int			trap_R_LightForPoint( vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir );
-void		trap_R_RenderScene( const refdef_t *fd );
-void		trap_R_SetColor( const float *rgba );	// NULL = 1,1,1,1
-void		trap_R_DrawStretchPic( float x, float y, float w, float h, 
-			float s1, float t1, float s2, float t2, qhandle_t hShader );
-void		trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs );
-int			trap_R_LerpTag( orientation_t *tag, clipHandle_t mod, int startFrame, int endFrame, 
-					   float frac, const char *tagName );
-void		trap_R_RemapShader( const char *oldShader, const char *newShader, const char *timeOffset );
-
-void trap_R_SetFogParams(fogInfo_t* fogParams);
-
-// The glconfig_t will not change during the life of a cgame.
-// If it needs to change, the entire cgame will be restarted, because
-// all the qhandle_t are then invalid.
-void		trap_GetGlconfig( glconfig_t *glconfig );
-
-// the gamestate should be grabbed at startup, and whenever a
-// configstring changes
-void		trap_GetGameState( gameState_t *gamestate );
-
-// cgame will poll each frame to see if a newer snapshot has arrived
-// that it is interested in.  The time is returned seperately so that
-// snapshot latency can be calculated.
-void		trap_GetCurrentSnapshotNumber( int *snapshotNumber, int *serverTime );
-
-// a snapshot get can fail if the snapshot (or the entties it holds) is so
-// old that it has fallen out of the client system queue
-qboolean	trap_GetSnapshot( int snapshotNumber, snapshot_t *snapshot );
-
-// retrieve a text command from the server stream
-// the current snapshot will hold the number of the most recent command
-// qfalse can be returned if the client system handled the command
-// argc() / argv() can be used to examine the parameters of the command
-qboolean	trap_GetServerCommand( int serverCommandNumber );
-
-// returns the most recent command number that can be passed to GetUserCmd
-// this will always be at least one higher than the number in the current
-// snapshot, and it may be quite a few higher if it is a fast computer on
-// a lagged connection
-int			trap_GetCurrentCmdNumber( void );	
-
-qboolean	trap_GetUserCmd( int cmdNumber, usercmd_t *ucmd );
-
-// used for the weapon select and zoom
-void		trap_SetUserCmdValue( int stateValue, float sensitivityScale );
-
-// aids for VM testing
-void		testPrintInt( char *string, int i );
-void		testPrintFloat( char *string, float f );
-
-int			trap_MemoryRemaining( void );
-void		trap_R_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font);
-qboolean	trap_Key_IsDown( int keynum );
-int			trap_Key_GetCatcher( void );
-void		trap_Key_SetCatcher( int catcher );
-int			trap_Key_GetKey( const char *binding );
-
-
-// normal sounds will have their volume dynamically changed as their entity
-// moves and the listener moves
-void        trap_S_StartSound(vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx);
-void        trap_S_StartSoundEx(vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx, int flags);
-void        trap_S_StopLoopingSound(int entnum);
-void        trap_S_StopStreamingSound(int entnum);  // usually AI.  character is talking and needs to be shut up /now/
-
-// a local sound is always played full volume
-void        trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
-void        trap_S_ClearLoopingSounds(qboolean killall);
-void        trap_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, int range, sfxHandle_t sfx, int volume);
-//void        trap_S_AddRealLoopingSound( int entityNum, const vec3_t origin, const vec3_t velocity, int range, sfxHandle_t sfx, int volume );
-void        trap_S_UpdateEntityPosition(int entityNum, const vec3_t origin);
-
-// Ridah, talking animations
-int         trap_S_GetVoiceAmplitude(int entityNum);
-// done.
-
-// repatialize recalculates the volumes of sound as they should be heard by the
-// given entityNum and position
-void trap_S_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3], int inwater);
-sfxHandle_t trap_S_RegisterSound(const char* sample);     // returns buzz if not found
-void        trap_S_StartBackgroundTrack(const char* intro, const char* loop, int fadeupTime); // empty name stops music
-void        trap_S_StopBackgroundTrack(void);
-void        trap_S_FadeBackgroundTrack(float targetvol, int time, int sound);  //----(SA)	added
-void        trap_S_StartStreamingSound(const char* intro, const char* loop, int entnum, int channel, int attenuation);
-void        trap_S_FadeAllSound(float targetvol, int time); //----(SA)	added
-
-qboolean trap_S_IsSoundPlaying(qhandle_t sfxhandle);
-
-void trap_R_ForceActiveMenu(const char* menu);
-
-typedef enum {
-  SYSTEM_PRINT,
-  CHAT_PRINT,
-  TEAMCHAT_PRINT
-} q3print_t; // bk001201 - warning: useless keyword or type name in empty declaration
-
-
-int trap_CIN_PlayCinematic( const char *arg0, int xpos, int ypos, int width, int height, int bits);
-e_status trap_CIN_StopCinematic(int handle);
-e_status trap_CIN_RunCinematic (int handle);
-void trap_CIN_DrawCinematic (int handle);
-void trap_CIN_SetExtents (int handle, int x, int y, int w, int h);
-
-void trap_SnapVector( float *v );
-
-qboolean	trap_loadCamera(const char *name);
-void		trap_startCamera(int time);
-qboolean	trap_getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
-
-qboolean	trap_GetEntityToken( char *buffer, int bufferSize );
-
 void	CG_ClearParticles (void);
 void	CG_AddParticles (void);
 void	CG_ParticleSnow (qhandle_t pshader, vec3_t origin, vec3_t origin2, int turb, float range, int snum);
@@ -1710,13 +1499,6 @@ void	CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, 
 void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duration, int sizeStart, int sizeEnd);
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
-
-qboolean trap_R_inPVS(const vec3_t p1, const vec3_t p2);
-
-void trap_R_FinishDXRLoading(void);
-void trap_R_ShutdownRaytracingMap(void);
-
-qhandle_t trap_R_RegisterCustomModel(const char* name, qhandle_t shader, polyVert_t* verts, int numVertexes);
 
 void CG_InitSprites(void);
 void CG_SpawnSprite(vec3_t origin, float scale, qhandle_t model);
@@ -1752,3 +1534,5 @@ void FX_CreateBream(int ent, vec3_t start, vec3_t end, qhandle_t m);
 void FX_RenderBeams(void);
 
 #define LS_FRAMETIME 100 // (ms)  cycle through lightstyle characters at 10fps
+
+extern cgameImport_t* engine;

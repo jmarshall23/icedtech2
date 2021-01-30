@@ -31,7 +31,7 @@ If you have questions concerning this license or the applicable additional terms
 
 
 #include "../gameshared/q_shared.h"
-#include "../cgame/tr_types.h"
+#include "../renderer/tr_public.h"
 #include "keycodes.h"
 
 #include "../../baseq3/ui/menudef.h"

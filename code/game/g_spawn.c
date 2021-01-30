@@ -609,7 +609,7 @@ qboolean G_ParseSpawnVars( void ) {
 	level.numSpawnVarChars = 0;
 
 	// parse the opening brace
-	if ( !trap_GetEntityToken( com_token, sizeof( com_token ) ) ) {
+	if ( !engine->SV_GetEntityToken( com_token, sizeof( com_token ) ) ) {
 		// end of spawn string
 		return qfalse;
 	}
@@ -620,7 +620,7 @@ qboolean G_ParseSpawnVars( void ) {
 	// go through all the key / value pairs
 	while ( 1 ) {	
 		// parse key
-		if ( !trap_GetEntityToken( keyname, sizeof( keyname ) ) ) {
+		if ( !engine->SV_GetEntityToken( keyname, sizeof( keyname ) ) ) {
 			G_Error( "G_ParseSpawnVars: EOF without closing brace" );
 		}
 
@@ -629,7 +629,7 @@ qboolean G_ParseSpawnVars( void ) {
 		}
 		
 		// parse value	
-		if ( !trap_GetEntityToken( com_token, sizeof( com_token ) ) ) {
+		if ( !engine->SV_GetEntityToken( com_token, sizeof( com_token ) ) ) {
 			G_Error( "G_ParseSpawnVars: EOF without closing brace" );
 		}
 
@@ -665,30 +665,30 @@ void SP_worldspawn( void ) {
 	}
 
 	// make some data visible to connecting client
-	trap_SetConfigstring( CS_GAME_VERSION, GAME_VERSION );
+	engine->SV_SetConfigstring( CS_GAME_VERSION, GAME_VERSION );
 
-	trap_SetConfigstring( CS_LEVEL_START_TIME, va("%i", level.startTime ) );
+	engine->SV_SetConfigstring( CS_LEVEL_START_TIME, va("%i", level.startTime ) );
 
 	int fogEnabled;
 	G_SpawnInt("fog", "1", &fogEnabled);
-	trap_SetConfigstring(CS_FOGENABLED, va("%i", fogEnabled));
+	engine->SV_SetConfigstring(CS_FOGENABLED, va("%i", fogEnabled));
 
 	G_SpawnString( "music", "", &s );
-	trap_SetConfigstring( CS_MUSIC, s );
+	engine->SV_SetConfigstring( CS_MUSIC, s );
 
 	G_SpawnString( "message", "", &s );
-	trap_SetConfigstring( CS_MESSAGE, s );				// map specific message
+	engine->SV_SetConfigstring( CS_MESSAGE, s );				// map specific message
 
-	trap_SetConfigstring( CS_MOTD, g_motd.string );		// message of the day
+	engine->SV_SetConfigstring( CS_MOTD, g_motd.string );		// message of the day
 
 	G_SpawnString( "gravity", "800", &s );
-	trap_Cvar_Set( "g_gravity", s );
+	engine->Cvar_Set( "g_gravity", s );
 
 	G_SpawnString( "enableDust", "0", &s );
-	trap_Cvar_Set( "g_enableDust", s );
+	engine->Cvar_Set( "g_enableDust", s );
 
 	G_SpawnString( "enableBreath", "0", &s );
-	trap_Cvar_Set( "g_enableBreath", s );
+	engine->Cvar_Set( "g_enableBreath", s );
 
 	G_SpawnString("worldtype", "0", &s);
 	level.worldtype = atoi(s);
@@ -697,13 +697,13 @@ void SP_worldspawn( void ) {
 	g_entities[ENTITYNUM_WORLD].classname = "worldspawn";
 
 	// see if we want a warmup time
-	trap_SetConfigstring( CS_WARMUP, "" );
+	engine->SV_SetConfigstring( CS_WARMUP, "" );
 	if ( g_restarted.integer ) {
-		trap_Cvar_Set( "g_restarted", "0" );
+		engine->Cvar_Set( "g_restarted", "0" );
 		level.warmupTime = 0;
 	} else if ( g_doWarmup.integer ) { // Turn it on
 		level.warmupTime = -1;
-		trap_SetConfigstring( CS_WARMUP, va("%i", level.warmupTime) );
+		engine->SV_SetConfigstring( CS_WARMUP, va("%i", level.warmupTime) );
 		G_LogPrintf( "Warmup:\n" );
 	}
 

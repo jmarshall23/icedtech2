@@ -13,7 +13,7 @@ void LightUse(gentity_t* self, gentity_t* other, gentity_t* activator) {
 		self->s.lightRadius = 0;
 	}
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 }
 
 void SpawnLight(gentity_t* ent, int style) {
@@ -81,7 +81,7 @@ void SpawnLight(gentity_t* ent, int style) {
 
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 
 	G_SetOrigin(ent, ent->s.origin);
 	VectorCopy(ent->s.angles, ent->s.apos.trBase);

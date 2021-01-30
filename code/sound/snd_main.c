@@ -243,8 +243,7 @@ void S_ClearLoopingSounds( qboolean killall )
 S_AddLoopingSound
 =================
 */
-void S_AddLoopingSound( int entityNum, const vec3_t origin,
-		const vec3_t velocity, const int range, sfxHandle_t sfx, int volume )
+void S_AddLoopingSound( int entityNum, const vec3_t origin, const vec3_t velocity, const int range, sfxHandle_t sfx, int volume )
 {
 	if( si.AddLoopingSound ) {
 		si.AddLoopingSound( entityNum, origin, velocity, range, sfx, volume );
@@ -361,10 +360,10 @@ void S_BeginRegistration( void )
 S_RegisterSound
 =================
 */
-sfxHandle_t	S_RegisterSound( const char *sample, qboolean compressed )
+sfxHandle_t	S_RegisterSound( const char *sample )
 {
 	if( si.RegisterSound ) {
-		return si.RegisterSound( sample, compressed );
+		return si.RegisterSound( sample, qfalse );
 	} else {
 		return 0;
 	}

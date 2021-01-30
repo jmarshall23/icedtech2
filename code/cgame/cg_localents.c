@@ -170,7 +170,7 @@ void CG_FragmentBounceSound( localEntity_t *le, trace_t *trace ) {
 			} else {
 				s = cgs.media.gibBounce3Sound;
 			}
-			trap_S_StartSound( trace->endpos, ENTITYNUM_WORLD, CHAN_AUTO, s );
+			engine->S_StartSound( trace->endpos, ENTITYNUM_WORLD, CHAN_AUTO, s );
 		}
 	} else if ( le->leBounceSoundType == LEBS_BRASS ) {
 
@@ -237,10 +237,10 @@ void CG_AddFragment( localEntity_t *le ) {
 			le->refEntity.renderfx |= RF_LIGHTING_ORIGIN;
 			oldZ = le->refEntity.origin[2];
 			le->refEntity.origin[2] -= 16 * ( 1.0 - (float)t / SINK_TIME );
-			trap_R_AddRefEntityToScene( &le->refEntity );
+			engine->renderer->AddRefEntityToScene( &le->refEntity );
 			le->refEntity.origin[2] = oldZ;
 		} else {
-			trap_R_AddRefEntityToScene( &le->refEntity );
+			engine->renderer->AddRefEntityToScene( &le->refEntity );
 		}
 
 		return;
@@ -262,7 +262,7 @@ void CG_AddFragment( localEntity_t *le ) {
 			AnglesToAxis( angles, le->refEntity.axis );
 		}
 
-		trap_R_AddRefEntityToScene( &le->refEntity );
+		engine->renderer->AddRefEntityToScene( &le->refEntity );
 
 		// add a blood trail
 		if ( le->leBounceSoundType == LEBS_BLOOD ) {
@@ -275,7 +275,7 @@ void CG_AddFragment( localEntity_t *le ) {
 	// if it is in a nodrop zone, remove it
 	// this keeps gibs from waiting at the bottom of pits of death
 	// and floating levels
-	if ( trap_CM_PointContents( trace.endpos, 0 ) & CONTENTS_NODROP ) {
+	if ( engine->CM_PointContents( trace.endpos, 0 ) & CONTENTS_NODROP ) {
 		CG_FreeLocalEntity( le );
 		return;
 	}
@@ -289,7 +289,7 @@ void CG_AddFragment( localEntity_t *le ) {
 	// reflect the velocity on the trace plane
 	CG_ReflectVelocity( le, &trace );
 
-	trap_R_AddRefEntityToScene( &le->refEntity );
+	engine->renderer->AddRefEntityToScene( &le->refEntity );
 }
 
 /*
@@ -320,7 +320,7 @@ void CG_AddFadeRGB( localEntity_t *le ) {
 	re->shaderRGBA[2] = le->color[2] * c;
 	re->shaderRGBA[3] = le->color[3] * c;
 
-	trap_R_AddRefEntityToScene( re );
+	engine->renderer->AddRefEntityToScene( re );
 }
 
 /*
@@ -362,7 +362,7 @@ static void CG_AddMoveScaleFade( localEntity_t *le ) {
 		return;
 	}
 
-	trap_R_AddRefEntityToScene( re );
+	engine->renderer->AddRefEntityToScene( re );
 }
 
 
@@ -398,7 +398,7 @@ static void CG_AddScaleFade( localEntity_t *le ) {
 		return;
 	}
 
-	trap_R_AddRefEntityToScene( re );
+	engine->renderer->AddRefEntityToScene( re );
 }
 
 
@@ -438,7 +438,7 @@ static void CG_AddFallScaleFade( localEntity_t *le ) {
 		return;
 	}
 
-	trap_R_AddRefEntityToScene( re );
+	engine->renderer->AddRefEntityToScene( re );
 }
 
 /*
@@ -465,7 +465,7 @@ static void CG_AddSpriteExplosion( localEntity_t *le ) {
 	re.reType = RT_SPRITE;
 	re.radius = 42 * ( 1.0 - c ) + 30;
 
-	trap_R_AddRefEntityToScene( &re );
+	engine->renderer->AddRefEntityToScene( &re );
 
 	// add the dlight
 	if ( le->light ) {
@@ -478,7 +478,7 @@ static void CG_AddSpriteExplosion( localEntity_t *le ) {
 			light = 1.0 - ( light - 0.5 ) * 2;
 		}
 		light = le->light * light;
-		trap_R_AddLightToScene(re.origin, light, le->lightColor[0], le->lightColor[1], le->lightColor[2], LDAT_QUADRAT);
+		engine->renderer->AddLightToScene(re.origin, light, le->lightColor[0], le->lightColor[1], le->lightColor[2], LDAT_QUADRAT);
 	}
 }
 
@@ -505,8 +505,8 @@ void CG_AddKamikaze( localEntity_t *le ) {
 	if (t > KAMI_SHOCKWAVE_STARTTIME && t < KAMI_SHOCKWAVE_ENDTIME) {
 
 		if (!(le->leFlags & LEF_SOUND1)) {
-//			trap_S_StartSound (re->origin, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.kamikazeExplodeSound );
-			trap_S_StartLocalSound(cgs.media.kamikazeExplodeSound, CHAN_AUTO);
+//			engine->S_StartSound (re->origin, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.kamikazeExplodeSound );
+			engine->S_StartLocalSound(cgs.media.kamikazeExplodeSound, CHAN_AUTO);
 			le->leFlags |= LEF_SOUND1;
 		}
 		// 1st kamikaze shockwave
@@ -534,7 +534,7 @@ void CG_AddKamikaze( localEntity_t *le ) {
 		shockwave.shaderRGBA[2] = 0xff - c;
 		shockwave.shaderRGBA[3] = 0xff - c;
 
-		trap_R_AddRefEntityToScene( &shockwave );
+		engine->renderer->AddRefEntityToScene( &shockwave );
 	}
 
 	if (t > KAMI_EXPLODE_STARTTIME && t < KAMI_IMPLODE_ENDTIME) {
@@ -551,8 +551,8 @@ void CG_AddKamikaze( localEntity_t *le ) {
 		}
 		else {
 			if (!(le->leFlags & LEF_SOUND2)) {
-//				trap_S_StartSound (re->origin, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.kamikazeImplodeSound );
-				trap_S_StartLocalSound(cgs.media.kamikazeImplodeSound, CHAN_AUTO);
+//				engine->S_StartSound (re->origin, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.kamikazeImplodeSound );
+				engine->S_StartLocalSound(cgs.media.kamikazeImplodeSound, CHAN_AUTO);
 				le->leFlags |= LEF_SOUND2;
 			}
 			c = (float)(KAMI_IMPLODE_ENDTIME - t) / (float) (KAMI_IMPLODE_ENDTIME - KAMI_IMPLODE_STARTTIME);
@@ -562,9 +562,9 @@ void CG_AddKamikaze( localEntity_t *le ) {
 		VectorScale( axis[2], c * KAMI_BOOMSPHERE_MAXRADIUS / KAMI_BOOMSPHEREMODEL_RADIUS, re->axis[2] );
 		re->nonNormalizedAxes = qtrue;
 
-		trap_R_AddRefEntityToScene( re );
+		engine->renderer->AddRefEntityToScene( re );
 		// add the dlight
-		trap_R_AddLightToScene( re->origin, c * 1000.0, 1.0, 1.0, c, LDAT_QUADRAT);
+		engine->renderer->AddLightToScene( re->origin, c * 1000.0, 1.0, 1.0, c, LDAT_QUADRAT);
 	}
 
 	if (t > KAMI_SHOCKWAVE2_STARTTIME && t < KAMI_SHOCKWAVE2_ENDTIME) {
@@ -608,7 +608,7 @@ void CG_AddKamikaze( localEntity_t *le ) {
 		shockwave.shaderRGBA[2] = 0xff - c;
 		shockwave.shaderRGBA[3] = 0xff - c;
 
-		trap_R_AddRefEntityToScene( &shockwave );
+		engine->renderer->AddRefEntityToScene( &shockwave );
 	}
 }
 
@@ -618,7 +618,7 @@ CG_AddInvulnerabilityImpact
 ===================
 */
 void CG_AddInvulnerabilityImpact( localEntity_t *le ) {
-	trap_R_AddRefEntityToScene( &le->refEntity );
+	engine->renderer->AddRefEntityToScene( &le->refEntity );
 }
 
 /*
@@ -640,7 +640,7 @@ void CG_AddInvulnerabilityJuiced( localEntity_t *le ) {
 		CG_GibPlayer( le->refEntity.origin );
 	}
 	else {
-		trap_R_AddRefEntityToScene( &le->refEntity );
+		engine->renderer->AddRefEntityToScene( &le->refEntity );
 	}
 }
 
@@ -654,7 +654,7 @@ void CG_AddRefEntity( localEntity_t *le ) {
 		CG_FreeLocalEntity( le );
 		return;
 	}
-	trap_R_AddRefEntityToScene( &le->refEntity );
+	engine->renderer->AddRefEntityToScene( &le->refEntity );
 }
 
 #endif
@@ -740,7 +740,7 @@ void CG_AddScorePlum( localEntity_t *le ) {
 	for (i = 0; i < numdigits; i++) {
 		VectorMA(origin, (float) (((float) numdigits / 2) - i) * NUMBER_SIZE, vec, re->origin);
 		re->customShader = cgs.media.numberShaders[digits[numdigits-1-i]];
-		trap_R_AddRefEntityToScene( re );
+		engine->renderer->AddRefEntityToScene( re );
 	}
 }
 

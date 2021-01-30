@@ -62,7 +62,7 @@ long fastftol( float f ) {
 	return (long)f;
 }
 
-void Sys_SnapVector( float *v )
+void Sys_SnapVector(float* v)
 {
 	v[0] = rint(v[0]);
 	v[1] = rint(v[1]);

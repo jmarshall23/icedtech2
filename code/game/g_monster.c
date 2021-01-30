@@ -133,7 +133,7 @@ void M_CheckGround(gentity_t* ent)
 	point[1] = ent->r.currentOrigin[1];
 	point[2] = ent->r.currentOrigin[2] - 0.25;
 
-	trap_Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, point, ent - g_entities, MASK_MONSTERSOLID);
+	engine->SV_Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, point, ent - g_entities, MASK_MONSTERSOLID);
 
 	// check steepness
 	if (trace.plane.normal[2] < 0.7 && !trace.startsolid)
@@ -167,7 +167,7 @@ void M_CatagorizePosition(gentity_t* ent)
 	point[0] = ent->r.currentOrigin[0];
 	point[1] = ent->r.currentOrigin[1];
 	point[2] = ent->r.currentOrigin[2] + ent->r.mins[2] + 1;
-	cont = trap_PointContents(point, -1);
+	cont = engine->SV_PointContents(point, -1);
 
 	if (!(cont & MASK_WATER))
 	{
@@ -179,13 +179,13 @@ void M_CatagorizePosition(gentity_t* ent)
 	ent->watertype = cont;
 	ent->waterlevel = 1;
 	point[2] += 26;
-	cont = trap_PointContents(point, -1);
+	cont = engine->SV_PointContents(point, -1);
 	if (!(cont & MASK_WATER))
 		return;
 
 	ent->waterlevel = 2;
 	point[2] += 22;
-	cont = trap_PointContents(point, -1);
+	cont = engine->SV_PointContents(point, -1);
 	if (cont & MASK_WATER)
 		ent->waterlevel = 3;
 }
@@ -293,14 +293,14 @@ void M_droptofloor(gentity_t* ent)
 	VectorCopy(ent->r.currentOrigin, end);
 	end[2] -= 256;
 
-	trap_Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, end, ent - g_entities, MASK_MONSTERSOLID);
+	engine->SV_Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, end, ent - g_entities, MASK_MONSTERSOLID);
 
 	if (trace.fraction == 1 || trace.allsolid)
 		return;
 
 	VectorCopy(trace.endpos, ent->r.currentOrigin);
 
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 	M_CheckGround(ent);
 	M_CatagorizePosition(ent);
 }
@@ -444,7 +444,7 @@ void monster_triggered_spawn(gentity_t* self)
 	self->svflags &= ~SVF_NOCLIENT;
 	self->air_finished = level.time + 12;
 	//gi.linkentity(self);
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	monster_start_go(self);
 
@@ -691,7 +691,7 @@ void monster_start_go(gentity_t* self)
 	self->think = monster_think;
 	self->nextthink = level.time + FRAMETIME;
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 }
 
 

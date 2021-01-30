@@ -24,8 +24,8 @@ targeted by another entity.
 
 void SP_func_bossgate(gentity_t* ent) {
 	ent->s.eType = ET_MOVER;
-	trap_SetBrushModel(ent, ent->model);
-	trap_LinkEntity(ent);
+	engine->SV_SetBrushModel(ent, ent->model);
+	engine->SV_LinkEntity(ent);
 }
 
 /*
@@ -159,7 +159,7 @@ void Think_SpawnNewDoorTrigger(gentity_t* ent) {
 		other->touch = Touch_DoorTrigger;
 		// remember the thinnest axis
 		other->count = best;
-		trap_LinkEntity(other);
+		engine->SV_LinkEntity(other);
 	}
 
 	MatchTeam(ent, ent->moverState, level.time);
@@ -199,7 +199,7 @@ void DoorSpawn(gentity_t* ent) {
 	VectorCopy(ent->s.origin, ent->pos1);
 
 	// calculate second position
-	trap_SetBrushModel(ent, ent->model);
+	engine->SV_SetBrushModel(ent, ent->model);
 	G_SetMovedir(ent->s.angles, ent->movedir);
 	abs_movedir[0] = fabs(ent->movedir[0]);
 	abs_movedir[1] = fabs(ent->movedir[1]);

@@ -169,7 +169,7 @@ void G_RegisterCvars(void) {
 	qboolean remapped = qfalse;
 
 	for (i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++) {
-		trap_Cvar_Register(cv->vmCvar, cv->cvarName,
+		engine->Cvar_Register(cv->vmCvar, cv->cvarName,
 			cv->defaultString, cv->cvarFlags);
 		if (cv->vmCvar)
 			cv->modificationCount = cv->vmCvar->modificationCount;
@@ -182,7 +182,7 @@ void G_RegisterCvars(void) {
 	// check some things
 	if (g_gametype.integer < 0 || g_gametype.integer >= GT_MAX_GAME_TYPE) {
 		G_Printf("g_gametype %i is out of range, defaulting to 0\n", g_gametype.integer);
-		trap_Cvar_Set("g_gametype", "0");
+		engine->Cvar_Set("g_gametype", "0");
 	}
 
 	level.warmupModificationCount = g_warmup.modificationCount;
@@ -200,13 +200,13 @@ void G_UpdateCvars(void) {
 
 	for (i = 0, cv = gameCvarTable; i < gameCvarTableSize; i++, cv++) {
 		if (cv->vmCvar) {
-			trap_Cvar_Update(cv->vmCvar);
+			engine->Cvar_Update(cv->vmCvar);
 
 			if (cv->modificationCount != cv->vmCvar->modificationCount) {
 				cv->modificationCount = cv->vmCvar->modificationCount;
 
 				if (cv->trackChange) {
-					trap_SendServerCommand(-1, va("print \"Server: %s changed to %s\n\"",
+					engine->SV_GameSendServerCommand(-1, va("print \"Server: %s changed to %s\n\"",
 						cv->cvarName, cv->vmCvar->string));
 				}
 

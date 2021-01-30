@@ -21,8 +21,8 @@ CG_InitExplosionSprite
 void CG_InitExplosionSprite(void) {
 	for (int i = 0; i < 3; i++) {
 		qhandle_t shader;
-		shader = trap_R_RegisterShader(va("sprites/explosion/explode_%d", i));
-		cgs.media.explodeModel[i] = trap_R_RegisterCustomModel(va("_explode_%d", i), shader, &spriteVerts, 6);
+		shader = engine->renderer->RegisterShader(va("sprites/explosion/explode_%d", i));
+		cgs.media.explodeModel[i] = engine->renderer->RegisterCustomModel(va("_explode_%d", i), shader, &spriteVerts, 6);
 	}
 }
 
@@ -33,8 +33,8 @@ void CG_InitExplosionSprite(void) {
 //*/
 //void CG_InitSmokePuffSprite(void) {
 //	qhandle_t shader;
-//	shader = trap_R_RegisterShader("smokePuff");
-//	cgs.media.smokePuffModel = trap_R_RegisterCustomModel("_smokePuffMesh", shader, &spriteVerts, 6);
+//	shader = engine->renderer->RegisterShader("smokePuff");
+//	cgs.media.smokePuffModel = engine->renderer->RegisterCustomModel("_smokePuffMesh", shader, &spriteVerts, 6);
 //}
 //
 ///*
@@ -44,8 +44,8 @@ void CG_InitExplosionSprite(void) {
 //*/
 //void CG_InitPlasmaSprite(void) {
 //	qhandle_t shader;
-//	shader = trap_R_RegisterShader("sprites/plasma1");	
-//	cgs.media.plasmaBallModel =  trap_R_RegisterCustomModel("_plasmaSpriteMesh", shader, &spriteVerts, 6);
+//	shader = engine->renderer->RegisterShader("sprites/plasma1");	
+//	cgs.media.plasmaBallModel =  engine->renderer->RegisterCustomModel("_plasmaSpriteMesh", shader, &spriteVerts, 6);
 //}
 
 /*
@@ -77,7 +77,7 @@ void CG_SpawnSprite(vec3_t origin, float scale, qhandle_t model) {
 
 	AnglesToAxis(cg.refdefViewAngles, ent.axis);
 
-	trap_R_AddRefEntityToScene(&ent);
+	engine->renderer->AddRefEntityToScene(&ent);
 }
 
 /*

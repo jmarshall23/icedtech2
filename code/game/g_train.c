@@ -192,7 +192,7 @@ void SP_func_train(gentity_t* self) {
 		return;
 	}
 
-	trap_SetBrushModel(self, self->model);
+	engine->SV_SetBrushModel(self, self->model);
 	InitMover(self);
 
 	self->reached = Reached_Train;

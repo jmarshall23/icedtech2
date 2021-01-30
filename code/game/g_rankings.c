@@ -58,7 +58,7 @@ void G_RankRunFrame()
 			if ( ent->r.svFlags & SVF_BOT)
 			{
 				// no bots in ranked games
-				trap_SendConsoleCommand( EXEC_INSERT, va("kick %s\n", 
+				engine->Cbuf_ExecuteText( EXEC_INSERT, va("kick %s\n", 
 					ent->client->pers.netname) );
 				continue;
 			}
@@ -70,7 +70,7 @@ void G_RankRunFrame()
 			{
 				// inform client of current status
 				// not needed for client side log in
-				trap_SendServerCommand( i, va("rank_status %i\n",status) );
+				engine->SV_GameSendServerCommand( i, va("rank_status %i\n",status) );
 				if ( i == 0 )
 				{
 					int j = 0;
@@ -88,8 +88,8 @@ void G_RankRunFrame()
 					ent->client->sess.spectatorState = SPECTATOR_FREE;
 					ClientSpawn( ent );
 					// make sure by now CS_GRAND rankingsGameID is ready
-					trap_SendServerCommand( i, va("rank_status %i\n",status) );
-					trap_SendServerCommand( i, "rank_menu\n" );
+					engine->SV_GameSendServerCommand( i, va("rank_status %i\n",status) );
+					engine->SV_GameSendServerCommand( i, "rank_menu\n" );
 				}
 				break;
 			case QGR_STATUS_NO_USER:
@@ -143,7 +143,7 @@ void G_RankRunFrame()
 		if( ((g_fraglimit.integer == 0) || (g_fraglimit.integer > 100)) && 
 			((g_timelimit.integer == 0) || (g_timelimit.integer > 1000)) )
 		{
-			trap_Cvar_Set( "timelimit", "1000" );
+			engine->Cvar_Set( "timelimit", "1000" );
 		}
 	}
 
@@ -1085,51 +1085,51 @@ void G_RankGameOver( void )
 	}
 	
 	// hostname
-	trap_Cvar_VariableStringBuffer( "sv_hostname", str, sizeof(str) );
+	engine->Cvar_VariableStringBuffer( "sv_hostname", str, sizeof(str) );
 	trap_RankReportStr( -1, -1, QGR_KEY_HOSTNAME, str );
 
 	// map
-	trap_Cvar_VariableStringBuffer( "mapname", str, sizeof(str) );
+	engine->Cvar_VariableStringBuffer( "mapname", str, sizeof(str) );
 	trap_RankReportStr( -1, -1, QGR_KEY_MAP, str );
 
 	// mod
-	trap_Cvar_VariableStringBuffer( "fs_game", str, sizeof(str) );
+	engine->Cvar_VariableStringBuffer( "fs_game", str, sizeof(str) );
 	trap_RankReportStr( -1, -1, QGR_KEY_MOD, str );
 
 	// gametype
-	num = trap_Cvar_VariableIntegerValue("g_gametype");
+	num = engine->Cvar_VariableIntegerValue("g_gametype");
 	trap_RankReportInt( -1, -1, QGR_KEY_GAMETYPE, num, 0 );
 	
 	// fraglimit
-	num = trap_Cvar_VariableIntegerValue("fraglimit");
+	num = engine->Cvar_VariableIntegerValue("fraglimit");
 	trap_RankReportInt( -1, -1, QGR_KEY_FRAGLIMIT, num, 0 );
 	
 	// timelimit
-	num = trap_Cvar_VariableIntegerValue("timelimit");
+	num = engine->Cvar_VariableIntegerValue("timelimit");
 	trap_RankReportInt( -1, -1, QGR_KEY_TIMELIMIT, num, 0 );
 
 	// maxclients
-	num = trap_Cvar_VariableIntegerValue("sv_maxclients");
+	num = engine->Cvar_VariableIntegerValue("sv_maxclients");
 	trap_RankReportInt( -1, -1, QGR_KEY_MAXCLIENTS, num, 0 );
 
 	// maxrate
-	num = trap_Cvar_VariableIntegerValue("sv_maxRate");
+	num = engine->Cvar_VariableIntegerValue("sv_maxRate");
 	trap_RankReportInt( -1, -1, QGR_KEY_MAXRATE, num, 0 );
 
 	// minping
-	num = trap_Cvar_VariableIntegerValue("sv_minPing");
+	num = engine->Cvar_VariableIntegerValue("sv_minPing");
 	trap_RankReportInt( -1, -1, QGR_KEY_MINPING, num, 0 );
 
 	// maxping
-	num = trap_Cvar_VariableIntegerValue("sv_maxPing");
+	num = engine->Cvar_VariableIntegerValue("sv_maxPing");
 	trap_RankReportInt( -1, -1, QGR_KEY_MAXPING, num, 0 );
 
 	// dedicated
-	num = trap_Cvar_VariableIntegerValue("dedicated");
+	num = engine->Cvar_VariableIntegerValue("dedicated");
 	trap_RankReportInt( -1, -1, QGR_KEY_DEDICATED, num, 0 );
 
 	// version
-	trap_Cvar_VariableStringBuffer( "version", str, sizeof(str) );
+	engine->Cvar_VariableStringBuffer( "version", str, sizeof(str) );
 	trap_RankReportStr( -1, -1, QGR_KEY_VERSION, str );
 }
 

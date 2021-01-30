@@ -1016,7 +1016,7 @@ void zombie_paine10(gentity_t *self) {
 
 sound (self, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM);
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 }
 // WARNING: No AI state change specified, defaulting to ai_stand
@@ -1035,13 +1035,13 @@ void zombie_paine12(gentity_t *self) {
 self->health = 30;
 sound (self, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 if (!walkmove(self, 0, 0))
 {
 	self->think = zombie_paine11;
 		self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	return;
 }
@@ -1224,7 +1224,7 @@ void monster_zombie(gentity_t *self) {
 	precache_sound ("zombie/idle_w2.wav");
 
 		self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->movetype = MOVETYPE_STEP;
 

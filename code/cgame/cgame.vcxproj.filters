@@ -47,9 +47,6 @@
     <ClCompile Include="cg_snapshot.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_syscalls.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cg_view.c">
       <Filter>Source Files</Filter>
     </ClCompile>

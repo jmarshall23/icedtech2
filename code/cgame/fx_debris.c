@@ -16,7 +16,7 @@ luckily these assets are low poly the memory overhead is small(max 2mb).
 =====================
 */
 void CG_LoadDebrisMesh(const char* name, const char *filename, cgDebrisModel_t* model) {
-	int numWorldShaders = trap_GetNumWorldShaders();
+	int numWorldShaders = engine->renderer->GetNumWorldShaders();
 
 	memset(model, 0, sizeof(cgDebrisModel_t));
 
@@ -25,8 +25,8 @@ void CG_LoadDebrisMesh(const char* name, const char *filename, cgDebrisModel_t* 
 	}
 
 	for (int i = 0; i < numWorldShaders; i++) {
-		qhandle_t worldShader = trap_GetWorldShader(i);
-		model->models[i] = trap_R_RegisterModelEx(va("_debris%s_%d", name, i), filename, worldShader);
+		qhandle_t worldShader = engine->renderer->GetWorldShader(i);
+		model->models[i] = engine->renderer->RE_RegisterModelEx(va("_debris%s_%d", name, i), filename, worldShader);
 	}
 }
 
@@ -113,7 +113,7 @@ void CG_AddDebrisElements(localEntity_t* le) {
 
 		le->lastTrailTime = t;
 		}
-	trap_R_AddRefEntityToScene(&le->refEntity);
+	engine->renderer->AddRefEntityToScene(&le->refEntity);
 
 }
 

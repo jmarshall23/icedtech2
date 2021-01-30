@@ -51,7 +51,7 @@ sfxHandle_t	CG_CustomSound( int clientNum, const char *soundName ) {
 	int			i;
 
 	if ( soundName[0] != '*' ) {
-		return trap_S_RegisterSound( soundName, qfalse );
+		return engine->S_RegisterSound( soundName, qfalse );
 	}
 
 	if ( clientNum < 0 || clientNum >= MAX_CLIENTS ) {
@@ -87,7 +87,7 @@ CG_FileExists
 static qboolean	CG_FileExists(const char *filename) {
 	int len;
 
-	len = trap_FS_FOpenFile( filename, 0, FS_READ );
+	len = engine->FS_FOpenFileByMode( filename, 0, FS_READ );
 	if (len>0) {
 		return qtrue;
 	}
@@ -291,7 +291,7 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 	teamname[0] = 0;
 
 	modelloaded = qtrue;
-	ci->model = trap_R_RegisterModel("models/player/player.md3");
+	ci->model = engine->renderer->RegisterModel("models/player/player.md3");
 	ci->newAnims = qfalse;	
 
 	// sounds
@@ -306,10 +306,10 @@ static void CG_LoadClientInfo( clientInfo_t *ci ) {
 		ci->sounds[i] = 0;
 		// if the model didn't load use the sounds of the default model
 		if (modelloaded) {
-			ci->sounds[i] = trap_S_RegisterSound( va("sound/player/%s/%s", dir, s + 1), qfalse );
+			ci->sounds[i] = engine->S_RegisterSound( va("sound/player/%s/%s", dir, s + 1), qfalse );
 		}
 		if ( !ci->sounds[i] ) {
-			ci->sounds[i] = trap_S_RegisterSound( va("sound/player/%s/%s", fallback, s + 1), qfalse );
+			ci->sounds[i] = engine->S_RegisterSound( va("sound/player/%s/%s", fallback, s + 1), qfalse );
 		}
 	}
 
@@ -537,7 +537,7 @@ void CG_NewClientInfo( int clientNum ) {
 			Q_strncpyz( newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof( newInfo.modelName ) );
 			Q_strncpyz( newInfo.skinName, "default", sizeof( newInfo.skinName ) );
 		} else {
-			trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
+			engine->Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
 			if ( ( skin = strchr( modelStr, '/' ) ) == NULL) {
 				skin = "default";
 			} else {
@@ -581,7 +581,7 @@ void CG_NewClientInfo( int clientNum ) {
 			Q_strncpyz( newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof( newInfo.headModelName ) );
 			Q_strncpyz( newInfo.headSkinName, "default", sizeof( newInfo.headSkinName ) );
 		} else {
-			trap_Cvar_VariableStringBuffer( "headmodel", modelStr, sizeof( modelStr ) );
+			engine->Cvar_VariableStringBuffer( "headmodel", modelStr, sizeof( modelStr ) );
 			if ( ( skin = strchr( modelStr, '/' ) ) == NULL) {
 				skin = "default";
 			} else {
@@ -618,7 +618,7 @@ void CG_NewClientInfo( int clientNum ) {
 	if ( !CG_ScanForExistingClientInfo( &newInfo ) ) {
 		qboolean	forceDefer;
 
-		forceDefer = trap_MemoryRemaining() < 4000000;
+		forceDefer = engine->Hunk_MemoryRemaining() < 4000000;
 
 		// if we are defering loads, just have it pick the first valid
 		if ( forceDefer || (cg_deferPlayers.integer && !cg_buildScript.integer && !cg.loading ) ) {
@@ -658,7 +658,7 @@ void CG_LoadDeferredPlayers( void ) {
 	for ( i = 0, ci = cgs.clientinfo ; i < cgs.maxclients ; i++, ci++ ) {
 		if ( ci->infoValid && ci->deferred ) {
 			// if we are low on memory, leave it deferred
-			if ( trap_MemoryRemaining() < 4000000 ) {
+			if ( engine->Hunk_MemoryRemaining() < 4000000 ) {
 				CG_Printf( "Memory is low.  Using deferred model.\n" );
 				ci->deferred = qfalse;
 				continue;
@@ -948,7 +948,7 @@ static void CG_BreathPuffs( centity_t *cent, refEntity_t *head) {
 	if ( cent->currentState.eFlags & EF_DEAD ) {
 		return;
 	}
-	contents = trap_CM_PointContents( head->origin, 0 );
+	contents = engine->CM_PointContents( head->origin, 0 );
 	if ( contents & ( CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA ) ) {
 		return;
 	}
@@ -1036,7 +1036,7 @@ static void CG_TrailItem( centity_t *cent, qhandle_t hModel ) {
 	AnglesToAxis( angles, ent.axis );
 
 	ent.hModel = hModel;
-	trap_R_AddRefEntityToScene( &ent );
+	engine->renderer->AddRefEntityToScene( &ent );
 }
 
 #ifdef MISSIONPACK // bk001204
@@ -1100,7 +1100,7 @@ static void CG_PlayerTokens( centity_t *cent, int renderfx ) {
 		VectorCopy(trail->positions[i], ent.origin);
 		angle = (((cg.time + 500 * MAX_SKULLTRAIL - 500 * i) / 16) & 255) * (M_PI * 2) / 255;
 		ent.origin[2] += sin(angle) * 10;
-		trap_R_AddRefEntityToScene( &ent );
+		engine->renderer->AddRefEntityToScene( &ent );
 		VectorCopy(trail->positions[i], origin);
 	}
 }
@@ -1134,7 +1134,7 @@ static void CG_PlayerFloatSprite( centity_t *cent, qhandle_t shader ) {
 	ent.shaderRGBA[1] = 255;
 	ent.shaderRGBA[2] = 255;
 	ent.shaderRGBA[3] = 255;
-	trap_R_AddRefEntityToScene( &ent );
+	engine->renderer->AddRefEntityToScene( &ent );
 }
 
 
@@ -1230,7 +1230,7 @@ static qboolean CG_PlayerShadow( centity_t *cent, float *shadowPlane ) {
 	VectorCopy( cent->lerpOrigin, end );
 	end[2] -= SHADOW_DISTANCE;
 
-	trap_CM_BoxTrace( &trace, cent->lerpOrigin, end, mins, maxs, 0, MASK_PLAYERSOLID );
+	engine->CM_BoxTrace( &trace, cent->lerpOrigin, end, mins, maxs, 0, MASK_PLAYERSOLID, qfalse );
 
 	// no shadow if too high
 	if ( trace.fraction == 1.0 || trace.startsolid || trace.allsolid ) {
@@ -1280,7 +1280,7 @@ static void CG_PlayerSplash( centity_t *cent ) {
 
 	// if the feet aren't in liquid, don't make a mark
 	// this won't handle moving water brushes, but they wouldn't draw right anyway...
-	contents = trap_CM_PointContents( end, 0 );
+	contents = engine->CM_PointContents( end, 0 );
 	if ( !( contents & ( CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA ) ) ) {
 		return;
 	}
@@ -1289,13 +1289,13 @@ static void CG_PlayerSplash( centity_t *cent ) {
 	start[2] += 32;
 
 	// if the head isn't out of liquid, don't make a mark
-	contents = trap_CM_PointContents( start, 0 );
+	contents = engine->CM_PointContents( start, 0 );
 	if ( contents & ( CONTENTS_SOLID | CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA ) ) {
 		return;
 	}
 
 	// trace down to find the surface
-	trap_CM_BoxTrace( &trace, start, end, NULL, NULL, 0, ( CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA ) );
+	engine->CM_BoxTrace( &trace, start, end, NULL, NULL, 0, ( CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA ), qfalse);
 
 	if ( trace.fraction == 1.0 ) {
 		return;
@@ -1342,7 +1342,7 @@ static void CG_PlayerSplash( centity_t *cent ) {
 	verts[3].modulate[2] = 255;
 	verts[3].modulate[3] = 255;
 
-	trap_R_AddPolyToScene( cgs.media.wakeMarkShader, 4, verts );
+	engine->renderer->AddPolyToScene( cgs.media.wakeMarkShader, 4, verts, 1);
 }
 
 
@@ -1359,7 +1359,7 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 
 	if ( state->powerups & ( 1 << PW_INVIS ) ) {
 		ent->customShader = cgs.media.invisShader;
-		trap_R_AddRefEntityToScene( ent );
+		engine->renderer->AddRefEntityToScene( ent );
 	} else {
 		/*
 		if ( state->eFlags & EF_KAMIKAZE ) {
@@ -1367,10 +1367,10 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 				ent->customShader = cgs.media.blueKamikazeShader;
 			else
 				ent->customShader = cgs.media.redKamikazeShader;
-			trap_R_AddRefEntityToScene( ent );
+			engine->renderer->AddRefEntityToScene( ent );
 		}
 		else {*/
-			trap_R_AddRefEntityToScene( ent );
+			engine->renderer->AddRefEntityToScene( ent );
 		//}
 
 		if ( state->powerups & ( 1 << PW_QUAD ) )
@@ -1379,17 +1379,17 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 				ent->customShader = cgs.media.redQuadShader;
 			else
 				ent->customShader = cgs.media.quadShader;
-			trap_R_AddRefEntityToScene( ent );
+			engine->renderer->AddRefEntityToScene( ent );
 		}
 		if ( state->powerups & ( 1 << PW_REGEN ) ) {
 			if ( ( ( cg.time / 100 ) % 10 ) == 1 ) {
 				ent->customShader = cgs.media.regenShader;
-				trap_R_AddRefEntityToScene( ent );
+				engine->renderer->AddRefEntityToScene( ent );
 			}
 		}
 		if ( state->powerups & ( 1 << PW_BATTLESUIT ) ) {
 			ent->customShader = cgs.media.battleSuitShader;
-			trap_R_AddRefEntityToScene( ent );
+			engine->renderer->AddRefEntityToScene( ent );
 		}
 	}
 }
@@ -1407,7 +1407,7 @@ int CG_LightVerts( vec3_t normal, int numVerts, polyVert_t *verts )
 	vec3_t			lightDir;
 	vec3_t			directedLight;
 
-	trap_R_LightForPoint( verts[0].xyz, ambientLight, directedLight, lightDir );
+	engine->renderer->LightForPoint( verts[0].xyz, ambientLight, directedLight, lightDir );
 
 	for (i = 0; i < numVerts; i++) {
 		incoming = DotProduct (normal, lightDir);
@@ -1488,7 +1488,7 @@ void CG_Player( centity_t *cent ) {
 	re.reType = RT_MODEL;
 	re.renderfx = renderfx;
 
-	trap_R_AddRefEntityToScene(&re);
+	engine->renderer->AddRefEntityToScene(&re);
 }
 
 

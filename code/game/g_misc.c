@@ -30,7 +30,7 @@ void SP_start_ambient(gentity_t* ent, const char* filename, float volume) {
 	ent->s.eventParm = G_SoundIndex(filename);
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 
 	G_SetOrigin(ent, ent->s.origin);
 	VectorCopy(ent->s.angles, ent->s.apos.trBase);
@@ -123,7 +123,7 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	}
 
 	// unlink to make sure it can't possibly interfere with G_KillBox
-	trap_UnlinkEntity (player);
+	engine->SV_UnlinkEntity (player);
 
 	VectorCopy ( origin, player->client->ps.origin );
 	player->client->ps.origin[2] += 1;
@@ -152,7 +152,7 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	VectorCopy( player->client->ps.origin, player->r.currentOrigin );
 
 	if ( player->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-		trap_LinkEntity (player);
+		engine->SV_LinkEntity (player);
 	}
 }
 
@@ -174,7 +174,7 @@ void SP_misc_model( gentity_t *ent ) {
 	ent->s.modelindex = G_ModelIndex( ent->model );
 	VectorSet (ent->r.mins, -16, -16, -16);
 	VectorSet (ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity (ent);
+	engine->SV_LinkEntity (ent);
 
 	G_SetOrigin( ent, ent->s.origin );
 	VectorCopy( ent->s.angles, ent->s.apos.trBase );
@@ -189,7 +189,7 @@ void SP_light_torch_small_walltorch(gentity_t* ent) {
 	ent->s.lightColor[2] = 1.0f;
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 
 	G_SetOrigin(ent, ent->s.origin);
 	VectorCopy(ent->s.angles, ent->s.apos.trBase);
@@ -204,7 +204,7 @@ void SP_light_flame_large_yellow(gentity_t* ent) {
 	ent->s.lightColor[2] = 1.0f;
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 
 	G_SetOrigin(ent, ent->s.origin);
 	VectorCopy(ent->s.angles, ent->s.apos.trBase);
@@ -219,7 +219,7 @@ void SP_light_flame_small_yellow(gentity_t* ent) {
 	ent->s.lightColor[2] = 1.0f;
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 
 	G_SetOrigin(ent, ent->s.origin);
 	VectorCopy(ent->s.angles, ent->s.apos.trBase);
@@ -298,7 +298,7 @@ void InitShooter( gentity_t *ent, int weapon ) {
 	//	ent->think = InitShooter_Finish;
 	//	ent->nextthink = level.time + 500;
 	//}
-	//trap_LinkEntity( ent );
+	//engine->SV_LinkEntity( ent );
 }
 
 /*QUAKED shooter_rocket (1 0 0) (-16 -16 -16) (16 16 16)

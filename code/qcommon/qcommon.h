@@ -934,8 +934,7 @@ void	Sys_Init (void);
 
 // general development dll loading for virtual machine testing
 // fqpath param added 7/20/02 by T.Ray - Sys_LoadDll is only called in vm.c at this time
-void	* QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoint)(int, ...),
-				  int (QDECL *systemcalls)(int, ...) );
+void* QDECL Sys_LoadDll(const char* name, void* (QDECL** entryPoint)(int apiVersion, void* engineApi));
 void	Sys_UnloadDll( void *dllHandle );
 
 void	Sys_UnloadGame( void );

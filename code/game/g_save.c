@@ -36,7 +36,7 @@ void G_UpdatePersistant(void) {
 	persistant.weapons = level.clients[0].ps.stats[STAT_WEAPONS];
 	memcpy(persistant.ammo, level.clients[0].ps.ammo, sizeof(int) * MAX_WEAPONS);
 
-	trap_SetPersistant(&persistant);
+	engine->SV_SetPersistant(&persistant);
 }
 
 /*
@@ -48,7 +48,7 @@ void G_SaveGame(const char* name) {
 	qhandle_t f;
 
 	// Open the save file for write.
-	f = trap_OpenSaveForWrite(name);
+	f = engine->SV_OpenSaveForWrite(name);
 	if (f == -1) {
 		G_Error("Failed to open save file for writing!\n");
 		return;
@@ -59,7 +59,7 @@ void G_SaveGame(const char* name) {
 	header.version = SAVEGAME_VERSION;
 	header.skill = g_skill.integer;
 	strcpy(header.mapName, g_mapname.string);
-	trap_FS_Write(&header, sizeof(fsSaveHeader_t), f);
+	engine->FS_Write(&header, sizeof(fsSaveHeader_t), f);
 
 	// Write out all the player info.
 	FS_WriteInt(f, g_entities[0].health);
@@ -68,10 +68,10 @@ void G_SaveGame(const char* name) {
 	FS_WriteInt(f, level.clients[0].ps.stats[STAT_ARMOR]);
 	FS_WriteInt(f, level.clients[0].ps.weapon);
 	FS_WriteInt(f, level.clients[0].ps.stats[STAT_WEAPONS]);
-	trap_FS_Write(level.clients[0].ps.ammo, sizeof(int) * MAX_WEAPONS, f);
+	engine->FS_Write(level.clients[0].ps.ammo, sizeof(int) * MAX_WEAPONS, f);
 
 	// Close the file.
-	trap_FS_FCloseFile(f);
+	engine->FS_FCloseFile(f);
 }
 
 /*
@@ -82,14 +82,14 @@ G_LoadGame
 void G_LoadGame(const char* name) {
 	qhandle_t f;
 
-	f = trap_OpenSaveForRead(name);
+	f = engine->SV_OpenSave(name);
 	if (f <= 0 ) {
 		G_Error("Failed to open save file for reading!\n");
 		return;
 	}
 
 	fsSaveHeader_t header;
-	trap_FS_Read(&header, sizeof(fsSaveHeader_t), f);
+	engine->FS_Read2(&header, sizeof(fsSaveHeader_t), f);
 
 	level.clients[0].ps.stats[STAT_HEALTH] = g_entities[0].health = FS_ReadInt(f);
 	FS_ReadVec(f, g_entities[0].r.currentOrigin, 3);
@@ -97,7 +97,7 @@ void G_LoadGame(const char* name) {
 	level.clients[0].ps.stats[STAT_ARMOR] = FS_ReadInt(f);
 	level.clients[0].ps.weapon = FS_ReadInt(f);
 	level.clients[0].ps.stats[STAT_WEAPONS] = FS_ReadInt(f);
-	trap_FS_Read(level.clients[0].ps.ammo, sizeof(int) * MAX_WEAPONS, f);
+	engine->FS_Read2(level.clients[0].ps.ammo, sizeof(int) * MAX_WEAPONS, f);
 
 	// Update the target entity.
 	G_ClientSwitchWeapon(&g_entities[0], level.clients[0].ps.weapon);

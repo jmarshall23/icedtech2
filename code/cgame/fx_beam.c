@@ -117,7 +117,7 @@ void FX_RenderBeams(void) {
 			angles[2] = rand() % 360;
 			AnglesToAxis(angles, ref.axis);
 			
-			trap_R_AddRefEntityToScene(&ref);
+			engine->renderer->AddRefEntityToScene(&ref);
 
 			for (i = 0; i < 3; i++)
 				org[i] += dist[i] * 30;

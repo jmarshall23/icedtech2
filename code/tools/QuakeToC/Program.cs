@@ -78,8 +78,8 @@ namespace QuakeToC
             body = body.Replace("DropBackpack()", "DropBackpack(self)");
             body = body.Replace("walkmonster_start();", "walkmonster_start(self);");
             body = body.Replace("walkmonster_start ();", "walkmonster_start(self);");
-            body = body.Replace("self->solid = SOLID_NOT;", "\tself->r.contents = 0;\n\ttrap_LinkEntity(self);\n");
-            body = body.Replace("self->solid = SOLID_SLIDEBOX;", "\tself->r.contents = CONTENTS_SOLID;\n\ttrap_LinkEntity(self);\n");
+            body = body.Replace("self->solid = SOLID_NOT;", "\tself->r.contents = 0;\n\tengine->SV_LinkEntity(self);\n");
+            body = body.Replace("self->solid = SOLID_SLIDEBOX;", "\tself->r.contents = CONTENTS_SOLID;\n\tengine->SV_LinkEntity(self);\n");
             return body;
         }
 

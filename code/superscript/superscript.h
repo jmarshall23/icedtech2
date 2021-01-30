@@ -37,7 +37,7 @@ __forceinline void FireBullets(gentity_t *self, int count, vec3_t dir, vec3_t sp
 __forceinline void sound(gentity_t* self, int channel, char* filename, int notused, int attenuation) {
 	int s = G_SoundIndex(va("sound/%s", filename));
 	
-	trap_SendServerCommand(-1, va("sound %d %f %f %f", s, self->r.currentOrigin[0], self->r.currentOrigin[1], self->r.currentOrigin[2]));
+	engine->SV_GameSendServerCommand(-1, va("sound %d %f %f %f", s, self->r.currentOrigin[0], self->r.currentOrigin[1], self->r.currentOrigin[2]));
 }
 
 __forceinline void setsize(gentity_t* self, vec3_t mins, vec3_t maxs) {
@@ -57,7 +57,7 @@ __forceinline void setmodel(gentity_t* ent, char* filename) {
 	ent->s.modelindex = G_ModelIndex(filename);
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 }
 
 __forceinline void DropBackpack(gentity_t* self) {

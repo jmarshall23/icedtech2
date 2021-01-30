@@ -111,9 +111,6 @@
     <ClCompile Include="qcommon\unzip.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="qcommon\vm.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="win32\win_input.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -258,9 +255,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="qcommon\unzip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\vm_local.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="win32\win_local.h">

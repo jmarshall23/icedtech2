@@ -85,7 +85,7 @@ Coordinates are 640*480 virtual values
 */
 void CG_DrawPic(float x, float y, float width, float height, qhandle_t hShader) {
 	CG_AdjustFrom640(&x, &y, &width, &height);
-	trap_R_DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
+	engine->renderer->DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
 }
 
 /*
@@ -264,7 +264,7 @@ static void CG_DrawCenterString(void) {
 		return;
 	}
 
-	trap_R_SetColor(color);
+	engine->renderer->SetColor(color);
 
 	start = cg.centerPrint;
 
@@ -308,7 +308,7 @@ static void CG_DrawCenterString(void) {
 		start++;
 	}
 
-	trap_R_SetColor(NULL);
+	engine->renderer->SetColor(NULL);
 }
 
 
@@ -379,10 +379,10 @@ void CG_DrawStatusBar(void) {
 					color = 1;	// red
 				}
 			}
-			trap_R_SetColor(colors[color]);
+			engine->renderer->SetColor(colors[color]);
 
 			CG_DrawField(0, 432, 3, value);
-			trap_R_SetColor(NULL);
+			engine->renderer->SetColor(NULL);
 
 			// if we didn't draw a 3D icon, draw a 2D icon for ammo
 			if (!cg_draw3dIcons.integer && cg_drawIcons.integer) {
@@ -417,16 +417,16 @@ void CG_DrawStatusBar(void) {
 	// stretch the health up when taking damage
 	CG_DrawField(185 + 125, 432, 3, value);
 	CG_ColorForHealth(hcolor);
-	trap_R_SetColor(hcolor);
+	engine->renderer->SetColor(hcolor);
 
 
 	//
 	// armor
 	//
 	value = ps->stats[STAT_ARMOR];
-	trap_R_SetColor(colors[0]);
+	engine->renderer->SetColor(colors[0]);
 	CG_DrawField(500, 432, 3, value);
-	trap_R_SetColor(NULL);
+	engine->renderer->SetColor(NULL);
 	// if we didn't draw a 3D icon, draw a 2D icon for armor
 	if (!cg_draw3dIcons.integer && cg_drawIcons.integer) {
 		CG_DrawPic(370 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE, 432, ICON_SIZE, ICON_SIZE, cgs.media.armorIcon);

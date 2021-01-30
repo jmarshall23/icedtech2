@@ -1096,7 +1096,8 @@ void CL_KeyEvent (int key, qboolean down, unsigned time) {
 		// escape always gets out of CGAME stuff
 		if (cls.keyCatchers & KEYCATCH_CGAME) {
 			cls.keyCatchers &= ~KEYCATCH_CGAME;
-			VM_Call (cgvm, CG_EVENT_HANDLING, CGAME_EVENT_NONE);
+			//VM_Call (cgvm, CG_EVENT_HANDLING, CGAME_EVENT_NONE);
+			cgameVM->CG_EventHandling(CGAME_EVENT_NONE);
 			return;
 		}
 
@@ -1133,8 +1134,9 @@ void CL_KeyEvent (int key, qboolean down, unsigned time) {
 		if ( cls.keyCatchers & KEYCATCH_UI) {
 			//VM_Call( uivm, UI_KEY_EVENT, key, down );
 			_UI_KeyEvent(key, down);
-		} else if ( cls.keyCatchers & KEYCATCH_CGAME && cgvm ) {
-			VM_Call( cgvm, CG_KEY_EVENT, key, down );
+		} else if ( cls.keyCatchers & KEYCATCH_CGAME && cgameVM ) {
+			//VM_Call( cgvm, CG_KEY_EVENT, key, down );
+			cgameVM->CG_KeyEvent(key, down);
 		} 
 
 		return;
@@ -1150,8 +1152,9 @@ void CL_KeyEvent (int key, qboolean down, unsigned time) {
 		//} 
 		_UI_KeyEvent(key, down);
 	} else if ( cls.keyCatchers & KEYCATCH_CGAME ) {
-		if ( cgvm ) {
-			VM_Call( cgvm, CG_KEY_EVENT, key, down );
+		if ( cgameVM ) {
+			//VM_Call( cgvm, CG_KEY_EVENT, key, down );
+			cgameVM->CG_KeyEvent(key, down);
 		} 
 	} else if ( cls.keyCatchers & KEYCATCH_MESSAGE ) {
 		Message_Key( key );

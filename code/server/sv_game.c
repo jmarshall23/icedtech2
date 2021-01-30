@@ -23,6 +23,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "server.h"
 
+intptr_t *gameDLLhandle = NULL;
+gameExport_t* gameVM = NULL;
+
 const char* currentSaveGameName = NULL;
 char saveGameName[512];
 
@@ -295,8 +298,7 @@ SV_LocateGameData
 
 ===============
 */
-void SV_LocateGameData( sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t,
-					   playerState_t *clients, int sizeofGameClient ) {
+void SV_LocateGameData( sharedEntity_t *gEnts, int numGEntities, int sizeofGEntity_t, playerState_t *clients, int sizeofGameClient ) {
 	sv.gentities = gEnts;
 	sv.gentitySize = sizeofGEntity_t;
 	sv.num_entities = numGEntities;
@@ -332,217 +334,98 @@ static int	FloatAsInt( float f ) {
 	return temp.i;
 }
 
+qboolean SV_GetEntityToken(char* buffer, int bufferSize) {
+	const char* s;
+
+	s = COM_Parse(&sv.entityParsePoint);
+	Q_strncpyz(buffer, s, bufferSize);
+	if (!sv.entityParsePoint && !s[0]) {
+		return qfalse;
+	}
+	return qtrue;
+}
+
+#define GAME_BIND_FUNCTION(function) engineApi->##function = ##function;
+
+void SV_Trace2(trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask) {
+	SV_Trace(results, start, mins, maxs, end, passEntityNum, contentmask, qfalse);
+}
+
+void SV_TraceCapsule(trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask) {
+	SV_Trace(results, start, mins, maxs, end, passEntityNum, contentmask, qtrue);
+}
+
 /*
 ====================
-SV_GameSystemCalls
-
-The module is making a system call
+CL_BuildGameImport
 ====================
 */
-//rcg010207 - see my comments in VM_DllSyscall(), in qcommon/vm.c ...
-int SV_GameSystemCalls(intptr_t*args ) {
-	switch( args[0] ) {
-	case G_PRINT:
-		Com_Printf( "%s", VMA(1) );
-		return 0;
-	case G_ERROR:
-		Com_Error( ERR_DROP, "%s", VMA(1) );
-		return 0;
-	case G_MILLISECONDS:
-		return Sys_Milliseconds();
-	case G_CVAR_REGISTER:
-		Cvar_Register( VMA(1), VMA(2), VMA(3), args[4] ); 
-		return 0;
-	case G_CVAR_UPDATE:
-		Cvar_Update( VMA(1) );
-		return 0;
-	case G_CVAR_SET:
-		Cvar_Set( (const char *)VMA(1), (const char *)VMA(2) );
-		return 0;
-	case G_CVAR_VARIABLE_INTEGER_VALUE:
-		return Cvar_VariableIntegerValue( (const char *)VMA(1) );
-	case G_CVAR_VARIABLE_STRING_BUFFER:
-		Cvar_VariableStringBuffer( VMA(1), VMA(2), args[3] );
-		return 0;
-	case G_ARGC:
-		return Cmd_Argc();
-	case G_ARGV:
-		Cmd_ArgvBuffer( args[1], VMA(2), args[3] );
-		return 0;
-	case G_SEND_CONSOLE_COMMAND:
-		Cbuf_ExecuteText( args[1], VMA(2) );
-		return 0;
+void SV_BuildGameImport(gameImport_t* engineApi) {
+	// Server specific functions.
+	GAME_BIND_FUNCTION(SV_LocateGameData);
+	GAME_BIND_FUNCTION(SV_GameDropClient);
+	GAME_BIND_FUNCTION(SV_LinkEntity);
+	GAME_BIND_FUNCTION(SV_UnlinkEntity);
+	GAME_BIND_FUNCTION(SV_GameSendServerCommand);
+	GAME_BIND_FUNCTION(SV_AreaEntities);
+	GAME_BIND_FUNCTION(SV_EntityContact);
+	//GAME_BIND_FUNCTION(SV_Trace);
+	engineApi->SV_Trace = SV_Trace2;
+	GAME_BIND_FUNCTION(SV_TraceCapsule);
+	GAME_BIND_FUNCTION(SV_GetPersistant);
+	GAME_BIND_FUNCTION(SV_SetPersistant);
+	GAME_BIND_FUNCTION(SV_PointContents);
+	GAME_BIND_FUNCTION(SV_SetBrushModel);
+	GAME_BIND_FUNCTION(SV_inPVS);
+	GAME_BIND_FUNCTION(SV_inPVSIgnorePortals);
+	GAME_BIND_FUNCTION(SV_SetConfigstring);
+	GAME_BIND_FUNCTION(SV_GetConfigstring);
+	GAME_BIND_FUNCTION(SV_SetUserinfo);
+	GAME_BIND_FUNCTION(SV_GetUserinfo);
+	GAME_BIND_FUNCTION(SV_GetServerinfo);
+	GAME_BIND_FUNCTION(SV_AdjustAreaPortalState);
+	GAME_BIND_FUNCTION(SV_GetUsercmd);
+	GAME_BIND_FUNCTION(SV_GetEntityToken);
 
-	case G_FS_FOPEN_FILE:
-		return FS_FOpenFileByMode( VMA(1), VMA(2), args[3] );
-	case G_FS_READ:
-		FS_Read2( VMA(1), args[2], args[3] );
-		return 0;
-	case G_FS_WRITE:
-		FS_Write( VMA(1), args[2], args[3] );
-		return 0;
-	case G_FS_FCLOSE_FILE:
-		FS_FCloseFile( args[1] );
-		return 0;
-	case G_FS_GETFILELIST:
-		return FS_GetFileList( VMA(1), VMA(2), VMA(3), args[4] );
-	case G_FS_SEEK:
-		return FS_Seek( args[1], args[2], args[3] );
+	// Common
+	GAME_BIND_FUNCTION(Com_Error);
+	GAME_BIND_FUNCTION(Com_Printf);
+	GAME_BIND_FUNCTION(Com_RealTime);
+	GAME_BIND_FUNCTION(Sys_Milliseconds);
 
-	case G_LOCATE_GAME_DATA:
-		SV_LocateGameData( VMA(1), args[2], args[3], VMA(4), args[5] );
-		return 0;
-	case G_DROP_CLIENT:
-		SV_GameDropClient( args[1], VMA(2) );
-		return 0;
-	case G_SEND_SERVER_COMMAND:
-		SV_GameSendServerCommand( args[1], VMA(2) );
-		return 0;
-	case G_LINKENTITY:
-		SV_LinkEntity( VMA(1) );
-		return 0;
-	case G_UNLINKENTITY:
-		SV_UnlinkEntity( VMA(1) );
-		return 0;
-	case G_ENTITIES_IN_BOX:
-		return SV_AreaEntities( VMA(1), VMA(2), VMA(3), args[4] );
-	case G_ENTITY_CONTACT:
-		return SV_EntityContact( VMA(1), VMA(2), VMA(3), /*int capsule*/ qfalse );
-	case G_ENTITY_CONTACTCAPSULE:
-		return SV_EntityContact( VMA(1), VMA(2), VMA(3), /*int capsule*/ qtrue );
-	case G_TRACE:
-		SV_Trace( VMA(1), VMA(2), VMA(3), VMA(4), VMA(5), args[6], args[7], /*int capsule*/ qfalse );
-		return 0;
-	case G_TRACECAPSULE:
-		SV_Trace( VMA(1), VMA(2), VMA(3), VMA(4), VMA(5), args[6], args[7], /*int capsule*/ qtrue );
-		return 0;
-	case G_POINT_CONTENTS:
-		return SV_PointContents( VMA(1), args[2] );
-	case G_SET_BRUSH_MODEL:
-		SV_SetBrushModel( VMA(1), VMA(2) );
-		return 0;
-	case G_IN_PVS:
-		return SV_inPVS( VMA(1), VMA(2) );
-	case G_IN_PVS_IGNORE_PORTALS:
-		return SV_inPVSIgnorePortals( VMA(1), VMA(2) );
+	// Cvars
+	GAME_BIND_FUNCTION(Cvar_Register);
+	GAME_BIND_FUNCTION(Cvar_Update);
+	GAME_BIND_FUNCTION(Cvar_Set);
+	GAME_BIND_FUNCTION(Cvar_VariableStringBuffer);
+	GAME_BIND_FUNCTION(Cvar_VariableIntegerValue);
+	GAME_BIND_FUNCTION(Cmd_Argc);
+	GAME_BIND_FUNCTION(Cmd_ArgvBuffer);
+	GAME_BIND_FUNCTION(Cmd_ArgsBuffer);
 
-	case G_SET_CONFIGSTRING:
-		SV_SetConfigstring( args[1], VMA(2) );
-		return 0;
-	case G_GET_CONFIGSTRING:
-		SV_GetConfigstring( args[1], VMA(2), args[3] );
-		return 0;
-	case G_SET_USERINFO:
-		SV_SetUserinfo( args[1], VMA(2) );
-		return 0;
-	case G_GET_USERINFO:
-		SV_GetUserinfo( args[1], VMA(2), args[3] );
-		return 0;
-	case G_GET_SERVERINFO:
-		SV_GetServerinfo( VMA(1), args[2] );
-		return 0;
-	case G_ADJUST_AREA_PORTAL_STATE:
-		SV_AdjustAreaPortalState( VMA(1), args[2] );
-		return 0;
-	case G_AREAS_CONNECTED:
-		return CM_AreasConnected( args[1], args[2] );
+	// FileSystem
+	GAME_BIND_FUNCTION(FS_FOpenFileByMode);
+	GAME_BIND_FUNCTION(FS_Read2);
+	GAME_BIND_FUNCTION(FS_Write);
+	GAME_BIND_FUNCTION(FS_Seek);
+	GAME_BIND_FUNCTION(FS_FCloseFile);
+	GAME_BIND_FUNCTION(FS_GetFileList);
 
-	case G_BOT_ALLOCATE_CLIENT:
-		return 0;
-	case G_BOT_FREE_CLIENT:
-		return 0;
+	// Command System
+	GAME_BIND_FUNCTION(Cbuf_ExecuteText);
+	GAME_BIND_FUNCTION(Cbuf_AddText);	
+	GAME_BIND_FUNCTION(Cmd_RemoveCommand);	
 
-	case G_GETSAVEGAMENANE:
-		return SV_GetSaveGameName(VMA(1));
+	// Collision System
+	GAME_BIND_FUNCTION(CM_AreasConnected);
 
-	case G_GET_USERCMD:
-		SV_GetUsercmd( args[1], VMA(2) );
-		return 0;
-	case G_GET_ENTITY_TOKEN:
-		{
-			const char	*s;
+	// Save Game
+	GAME_BIND_FUNCTION(SV_OpenSaveForWrite);
+	GAME_BIND_FUNCTION(SV_GetSaveGameName);
+	GAME_BIND_FUNCTION(SV_OpenSave);
 
-			s = COM_Parse( &sv.entityParsePoint );
-			Q_strncpyz( VMA(1), s, args[2] );
-			if ( !sv.entityParsePoint && !s[0] ) {
-				return qfalse;
-			} else {
-				return qtrue;
-			}
-		}
-
-	case G_DEBUG_POLYGON_CREATE:
-		return 0;
-	case G_DEBUG_POLYGON_DELETE:
-		return 0;
-	case G_REAL_TIME:
-		return Com_RealTime( VMA(1) );
-	case G_SNAPVECTOR:
-		Sys_SnapVector( VMA(1) );
-		return 0;
-
-	case G_SETPERSISTANT:
-		SV_SetPersistant(VMA(1));
-		return 0;
-
-	case G_GETPERSISTANT:
-		SV_GetPersistant(VMA(1));
-		return 0;
-// jmarshall
-	case G_OPENSAVEREAD:
-		return SV_OpenSave(VMA(1));
-	case G_OPENSAVEWRITE:
-		return SV_OpenSaveForWrite(VMA(1));
-// jmarshall end
-
-		//====================================
-
-	case TRAP_MEMSET:
-		Com_Memset( VMA(1), args[2], args[3] );
-		return 0;
-
-	case TRAP_MEMCPY:
-		Com_Memcpy( VMA(1), VMA(2), args[3] );
-		return 0;
-
-	case TRAP_STRNCPY:
-		return (int)strncpy( VMA(1), VMA(2), args[3] );
-
-	case TRAP_SIN:
-		return FloatAsInt( sin( VMF(1) ) );
-
-	case TRAP_COS:
-		return FloatAsInt( cos( VMF(1) ) );
-
-	case TRAP_ATAN2:
-		return FloatAsInt( atan2( VMF(1), VMF(2) ) );
-
-	case TRAP_SQRT:
-		return FloatAsInt( sqrt( VMF(1) ) );
-
-	case TRAP_MATRIXMULTIPLY:
-		MatrixMultiply( VMA(1), VMA(2), VMA(3) );
-		return 0;
-
-	case TRAP_ANGLEVECTORS:
-		AngleVectors( VMA(1), VMA(2), VMA(3), VMA(4) );
-		return 0;
-
-	case TRAP_PERPENDICULARVECTOR:
-		PerpendicularVector( VMA(1), VMA(2) );
-		return 0;
-
-	case TRAP_FLOOR:
-		return FloatAsInt( floor( VMF(1) ) );
-
-	case TRAP_CEIL:
-		return FloatAsInt( ceil( VMF(1) ) );
-
-
-	default:
-		Com_Error( ERR_DROP, "Bad game system trap: %i", args[0] );
-	}
-	return -1;
+	// System
+	GAME_BIND_FUNCTION(Sys_SnapVector);
 }
 
 /*
@@ -553,12 +436,16 @@ Called every time a map changes
 ===============
 */
 void SV_ShutdownGameProgs( void ) {
-	if ( !gvm ) {
+	if ( !gameVM) {
 		return;
 	}
-	VM_Call( gvm, GAME_SHUTDOWN, qfalse );
-	VM_Free( gvm );
-	gvm = NULL;
+	//VM_Call( gvm, GAME_SHUTDOWN, qfalse );
+	gameVM->G_ShutdownGame(qfalse);
+
+	Sys_UnloadDll(gameDLLhandle);
+	
+	gameVM = NULL;
+	gameDLLhandle = NULL;
 }
 
 /*
@@ -595,7 +482,8 @@ static void SV_InitGameVM( qboolean restart, const char* saveGame) {
 	
 	// use the current msec count for a random seed
 	// init for this gamestate
-	VM_Call( gvm, GAME_INIT, svs.time, Com_Milliseconds(), restart );
+	//VM_Call( gvm, GAME_INIT, svs.time, Com_Milliseconds(), restart );
+	gameVM->G_InitGame(svs.time, Com_Milliseconds(), restart);
 }
 
 
@@ -608,16 +496,17 @@ Called on a map_restart, but not on a normal map change
 ===================
 */
 void SV_RestartGameProgs( void ) {
-	if ( !gvm ) {
+	if ( !gameVM) {
 		return;
 	}
-	VM_Call( gvm, GAME_SHUTDOWN, qtrue );
+	//VM_Call( gvm, GAME_SHUTDOWN, qtrue );
+	gameVM->G_ShutdownGame(qtrue);
 
 	// do a restart instead of a free
-	gvm = VM_Restart( gvm );
-	if ( !gvm ) { // bk001212 - as done below
-		Com_Error( ERR_FATAL, "VM_Restart on game failed" );
-	}
+	//gvm = VM_Restart( gvm );
+	//if ( !gvm ) { // bk001212 - as done below
+	//	Com_Error( ERR_FATAL, "VM_Restart on game failed" );
+	//}
 
 	SV_InitGameVM( qtrue, NULL );
 }
@@ -632,11 +521,26 @@ Called on a normal map change, not on a map_restart
 */
 void SV_InitGameProgs(const char* saveGame) {
 	cvar_t	*var;
+	static gameImport_t engineApi;
+	gameExport_t* (*entryPoint)(int apiVersion, void* engineApi);
 
 	// load the dll or bytecode
-	gvm = VM_Create( "qagame", SV_GameSystemCalls, Cvar_VariableValue( "vm_game" ) );
-	if ( !gvm ) {
-		Com_Error( ERR_FATAL, "VM_Create on game failed" );
+	//gvm = VM_Create( "qagame", SV_GameSystemCalls, Cvar_VariableValue( "vm_game" ) );
+	//if ( !gvm ) {
+	//	Com_Error( ERR_FATAL, "VM_Create on game failed" );
+	//}
+	gameDLLhandle = Sys_LoadDll("qagame", &entryPoint);
+	if (!gameDLLhandle) {
+		Com_Error(ERR_DROP, "VM_Create on game failed");
+	}
+
+	SV_BuildGameImport(&engineApi);
+
+	// Grab the vm functions.
+	gameVM = entryPoint(GAME_API_VERSION, &engineApi);
+	if (gameVM == NULL) {
+		Com_Error(ERR_FATAL, "Invalid game version\n");
+		return;
 	}
 
 	SV_InitGameVM( qfalse, saveGame);
@@ -655,6 +559,6 @@ qboolean SV_GameCommand( void ) {
 		return qfalse;
 	}
 
-	return VM_Call( gvm, GAME_CONSOLE_COMMAND );
+	return gameVM->ConsoleCommand(); //VM_Call( gvm, GAME_CONSOLE_COMMAND );
 }
 

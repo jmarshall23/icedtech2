@@ -475,7 +475,7 @@ void knight_die3(gentity_t *self) {
 	static mmove_t move = { death3, death3, &frame, knight_die4};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 }
 // WARNING: No AI state change specified, defaulting to ai_stand
 void knight_die4(gentity_t *self) {
@@ -539,7 +539,7 @@ void knight_dieb3(gentity_t *self) {
 	static mmove_t move = { deathb3, deathb3, &frame, knight_dieb4};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 }
 // WARNING: No AI state change specified, defaulting to ai_stand
 void knight_dieb4(gentity_t *self) {
@@ -632,7 +632,7 @@ void monster_knight(gentity_t *self) {
 	precache_sound ("knight/idle.wav");
 
 		self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->movetype = MOVETYPE_STEP;
 

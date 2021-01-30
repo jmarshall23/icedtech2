@@ -404,7 +404,7 @@ qboolean visible(gentity_t* self, gentity_t* other)
 	spot1[2] += self->viewheight;
 	VectorCopy(other->r.currentOrigin, spot2);
 	spot2[2] += other->viewheight;
-	trap_Trace(&trace, spot1, vec3_origin, vec3_origin, spot2, self - g_entities, MASK_OPAQUE);
+	engine->SV_Trace(&trace, spot1, vec3_origin, vec3_origin, spot2, self - g_entities, MASK_OPAQUE);
 
 	if (trace.fraction == 1.0)
 		return qtrue;
@@ -657,7 +657,7 @@ qboolean FindTarget(gentity_t* self)
 		}
 		else
 		{
-			if (!trap_InPVS(self->r.currentOrigin, client->r.currentOrigin))
+			if (!engine->SV_inPVS(self->r.currentOrigin, client->r.currentOrigin))
 				return qfalse;
 		}
 
@@ -670,7 +670,7 @@ qboolean FindTarget(gentity_t* self)
 
 		// check area portals - if they are different and not connected then we can't hear it
 		if (client->r.areanum != self->r.areanum)
-			if (!trap_AreasConnected(self->r.areanum, client->r.areanum))
+			if (!engine->CM_AreasConnected(self->r.areanum, client->r.areanum))
 				return qfalse;
 
 		self->ideal_yaw = vectoyaw(temp);
@@ -731,7 +731,7 @@ qboolean M_CheckAttack(gentity_t* self)
 		VectorCopy(self->enemy->r.currentOrigin, spot2);
 		spot2[2] += self->enemy->viewheight;
 
-		trap_Trace(&tr, spot1, NULL, NULL, spot2, self - g_entities, CONTENTS_SOLID | CONTENTS_MONSTER | CONTENTS_SLIME | CONTENTS_LAVA | CONTENTS_WINDOW);
+		engine->SV_Trace(&tr, spot1, NULL, NULL, spot2, self - g_entities, CONTENTS_SOLID | CONTENTS_MONSTER | CONTENTS_SLIME | CONTENTS_LAVA | CONTENTS_WINDOW);
 
 		// do we have a clear shot?
 		if (&g_entities[tr.entityNum] != self->enemy)
@@ -1165,7 +1165,7 @@ void ai_run(gentity_t* self, float dist)
 		//		gi.dprintf("checking for course correction\n");
 
 		//tr = gi.trace(self->r.currentOrigin, self->r.mins, self->r.maxs, self->monsterinfo.last_sighting, self, MASK_PLAYERSOLID);
-		trap_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, right_target, self - g_entities, MASK_PLAYERSOLID);
+		engine->SV_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, right_target, self - g_entities, MASK_PLAYERSOLID);
 		if (tr.fraction < 1)
 		{
 			VectorSubtract(self->goalentity->r.currentOrigin, self->r.currentOrigin, v);
@@ -1178,13 +1178,13 @@ void ai_run(gentity_t* self, float dist)
 			VectorSet(v, d2, -16, 0);
 			G_ProjectSource(self->r.currentOrigin, v, v_forward, v_right, left_target);
 			//tr = gi.trace(self->r.currentOrigin, self->r.mins, self->r.maxs, left_target, self, MASK_PLAYERSOLID);
-			trap_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, left_target, self - g_entities, MASK_PLAYERSOLID);
+			engine->SV_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, left_target, self - g_entities, MASK_PLAYERSOLID);
 			left = tr.fraction;
 
 			VectorSet(v, d2, 16, 0);
 			G_ProjectSource(self->r.currentOrigin, v, v_forward, v_right, right_target);
 			//tr = gi.trace(self->r.currentOrigin, self->r.mins, self->r.maxs, right_target, self, MASK_PLAYERSOLID);
-			trap_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, right_target, self - g_entities, MASK_PLAYERSOLID);
+			engine->SV_Trace(&tr, self->r.currentOrigin, self->r.mins, self->r.maxs, right_target, self - g_entities, MASK_PLAYERSOLID);
 			right = tr.fraction;
 
 			center = (d1 * center) / d2;

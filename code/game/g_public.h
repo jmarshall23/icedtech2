@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // g_public.h -- game module information visible to server
 
-#define	GAME_API_VERSION	8
+#define	GAME_API_VERSION	1008
 
 // entity->svFlags
 // the server does not know how to interpret most of the values
@@ -84,7 +84,7 @@ typedef struct {
 	int			singleClient;		
 
 	qboolean	bmodel;				// if false, assume an explicit mins / maxs bounding box
-									// only set by trap_SetBrushModel
+									// only set by engine->SV_SetBrushModel
 	vec3_t		mins, maxs;
 	int			contents;			// CONTENTS_TRIGGER, CONTENTS_SOLID, CONTENTS_BODY, etc
 									// a non-solid entity should set to 0
@@ -113,10 +113,15 @@ typedef struct {
 
 
 // the server looks at a sharedEntity, which is the start of the game's gentity_t structure
+#ifdef QUAKE_ENGINE
 typedef struct {
 	entityState_t	s;				// communicated by server to clients
 	entityShared_t	r;				// shared by both the server system and game
 } sharedEntity_t;
+#else
+typedef struct gentity_s gentity_t;
+#define sharedEntity_t	gentity_t
+#endif
 
 
 
@@ -125,176 +130,102 @@ typedef struct {
 //
 // system traps provided by the main engine
 //
-typedef enum {
-	//============== general Quake services ==================
+typedef struct {
+	// Server specific functions.
+	void	 (*SV_LocateGameData)(sharedEntity_t* gEnts, int numGEntities, int sizeofGEntity_t, playerState_t* clients, int sizeofGameClient);
+	void	 (*SV_GameDropClient)(int clientNum, const char* reason);
+	void	 (*SV_LinkEntity)(sharedEntity_t* ent);
+	void	 (*SV_UnlinkEntity)(sharedEntity_t* ent);
+	void	 (*SV_GameSendServerCommand)(int clientNum, const char* text);
+	int		 (*SV_AreaEntities)(const vec3_t mins, const vec3_t maxs, int* entityList, int maxcount);
+	qboolean (*SV_EntityContact)(vec3_t mins, vec3_t maxs, const sharedEntity_t* gEnt, int capsule);
+	void	 (*SV_Trace)(trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask);
+	void	 (*SV_TraceCapsule)(trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask);
+	void	 (*SV_GetPersistant)(PlayerPersistant_t* persistant);
+	void	 (*SV_SetPersistant)(PlayerPersistant_t* persistant);
+	int		 (*SV_PointContents)(const vec3_t p, int passEntityNum);
+	void	 (*SV_SetBrushModel)(sharedEntity_t* ent, const char* name);
+	qboolean (*SV_inPVS)(const vec3_t p1, const vec3_t p2);
+	qboolean (*SV_inPVSIgnorePortals)(const vec3_t p1, const vec3_t p2);
+	void	 (*SV_SetConfigstring)(int index, const char* val);
+	void	 (*SV_GetConfigstring)(int index, char* buffer, int bufferSize);
+	void	 (*SV_SetUserinfo)(int index, const char* val);
+	void	 (*SV_GetUserinfo)(int index, char* buffer, int bufferSize);
+	void	 (*SV_GetServerinfo)(char* buffer, int bufferSize);
+	void	 (*SV_AdjustAreaPortalState)(sharedEntity_t* ent, qboolean open);	
+	void	 (*SV_GetUsercmd)(int clientNum, usercmd_t* cmd);
+	qboolean (*SV_GetEntityToken)(char* buffer, int bufferSize);
 
-	G_PRINT,		// ( const char *string );
-	// print message on the local console
+	// Common
+	void	(*Com_Error)(int level, const char* error, ...);
+	void	(*Com_Printf)(const char* msg, ...);
+	int		(*Com_RealTime)(qtime_t* qtime);
+	int		(*Sys_Milliseconds)(void);
 
-	G_ERROR,		// ( const char *string );
-	// abort the game
+	// Cvars
+	void	(*Cvar_Register)(vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags);
+	void	(*Cvar_Update)(vmCvar_t* vmCvar);
+	void 	(*Cvar_Set)(const char* var_name, const char* value);
+	void	(*Cvar_VariableStringBuffer)(const char* var_name, char* buffer, int bufsize);
+	int		(*Cvar_VariableIntegerValue)(const char* var_name);
+	int		(*Cmd_Argc)(void);
+	void	(*Cmd_ArgvBuffer)(int arg, char* buffer, int bufferLength);
+	void	(*Cmd_ArgsBuffer)(char* buffer, int bufferLength);
 
-	G_MILLISECONDS,	// ( void );
-	// get current time for profiling reasons
-	// this should NOT be used for any game related tasks,
-	// because it is not journaled
+	// FileSystem
+	int		(*FS_FOpenFileByMode)(const char* qpath, fileHandle_t* f, fsMode_t mode);
+	int		(*FS_Read2)(void* buffer, int len, fileHandle_t f);
+	int		(*FS_Write)(const void* buffer, int len, fileHandle_t f);
+	int		(*FS_Seek)(fileHandle_t f, long offset, int origin);
+	void	(*FS_FCloseFile)(fileHandle_t f);
+	int		(*FS_GetFileList)(const char* path, const char* extension, char* listbuf, int bufsize);
 
-	// console variable interaction
-	G_CVAR_REGISTER,	// ( vmCvar_t *vmCvar, const char *varName, const char *defaultValue, int flags );
-	G_CVAR_UPDATE,	// ( vmCvar_t *vmCvar );
-	G_CVAR_SET,		// ( const char *var_name, const char *value );
-	G_CVAR_VARIABLE_INTEGER_VALUE,	// ( const char *var_name );
+	// Command System
+	void	(*Cbuf_ExecuteText)(int exec_when, const char* text);
+	void	(*Cbuf_AddText)(const char* text);
+	void	(*Cmd_RemoveCommand)(const char* cmd_name);
 
-	G_CVAR_VARIABLE_STRING_BUFFER,	// ( const char *var_name, char *buffer, int bufsize );
+	// Collision System
+	qboolean	(*CM_AreasConnected)(int area1, int area2);
 
-	G_ARGC,			// ( void );
-	// ClientCommand and ServerCommand parameter access
+	// Save Game
+	qhandle_t	(*SV_OpenSaveForWrite)(const char* name);
+	qboolean	(*SV_GetSaveGameName)(const char* name);
+	qhandle_t	(*SV_OpenSave)(const char* name);
 
-	G_ARGV,			// ( int n, char *buffer, int bufferLength );
-
-	G_FS_FOPEN_FILE,	// ( const char *qpath, fileHandle_t *file, fsMode_t mode );
-	G_FS_READ,		// ( void *buffer, int len, fileHandle_t f );
-	G_FS_WRITE,		// ( const void *buffer, int len, fileHandle_t f );
-	G_FS_FCLOSE_FILE,		// ( fileHandle_t f );
-
-	G_SEND_CONSOLE_COMMAND,	// ( const char *text );
-	// add commands to the console as if they were typed in
-	// for map changing, etc
-
-
-	//=========== server specific functionality =============
-
-	G_LOCATE_GAME_DATA,		// ( gentity_t *gEnts, int numGEntities, int sizeofGEntity_t,
-	//							playerState_t *clients, int sizeofGameClient );
-	// the game needs to let the server system know where and how big the gentities
-	// are, so it can look at them directly without going through an interface
-
-	G_DROP_CLIENT,		// ( int clientNum, const char *reason );
-	// kick a client off the server with a message
-
-	G_SEND_SERVER_COMMAND,	// ( int clientNum, const char *fmt, ... );
-	// reliably sends a command string to be interpreted by the given
-	// client.  If clientNum is -1, it will be sent to all clients
-
-	G_SET_CONFIGSTRING,	// ( int num, const char *string );
-	// config strings hold all the index strings, and various other information
-	// that is reliably communicated to all clients
-	// All of the current configstrings are sent to clients when
-	// they connect, and changes are sent to all connected clients.
-	// All confgstrings are cleared at each level start.
-
-	G_GET_CONFIGSTRING,	// ( int num, char *buffer, int bufferSize );
-
-	G_GET_USERINFO,		// ( int num, char *buffer, int bufferSize );
-	// userinfo strings are maintained by the server system, so they
-	// are persistant across level loads, while all other game visible
-	// data is completely reset
-
-	G_SET_USERINFO,		// ( int num, const char *buffer );
-
-	G_GET_SERVERINFO,	// ( char *buffer, int bufferSize );
-	// the serverinfo info string has all the cvars visible to server browsers
-
-	G_SET_BRUSH_MODEL,	// ( gentity_t *ent, const char *name );
-	// sets mins and maxs based on the brushmodel name
-
-	G_TRACE,	// ( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask );
-	// collision detection against all linked entities
-
-	G_POINT_CONTENTS,	// ( const vec3_t point, int passEntityNum );
-	// point contents against all linked entities
-
-	G_IN_PVS,			// ( const vec3_t p1, const vec3_t p2 );
-
-	G_IN_PVS_IGNORE_PORTALS,	// ( const vec3_t p1, const vec3_t p2 );
-
-	G_ADJUST_AREA_PORTAL_STATE,	// ( gentity_t *ent, qboolean open );
-
-	G_AREAS_CONNECTED,	// ( int area1, int area2 );
-
-	G_LINKENTITY,		// ( gentity_t *ent );
-	// an entity will never be sent to a client or used for collision
-	// if it is not passed to linkentity.  If the size, position, or
-	// solidity changes, it must be relinked.
-
-	G_UNLINKENTITY,		// ( gentity_t *ent );		
-	// call before removing an interactive entity
-
-	G_ENTITIES_IN_BOX,	// ( const vec3_t mins, const vec3_t maxs, gentity_t **list, int maxcount );
-	// EntitiesInBox will return brush models based on their bounding box,
-	// so exact determination must still be done with EntityContact
-
-	G_ENTITY_CONTACT,	// ( const vec3_t mins, const vec3_t maxs, const gentity_t *ent );
-	// perform an exact check against inline brush models of non-square shape
-
-	// access for bots to get and free a server client (FIXME?)
-	G_BOT_ALLOCATE_CLIENT,	// ( void );
-
-	G_BOT_FREE_CLIENT,	// ( int clientNum );
-
-	G_GET_USERCMD,	// ( int clientNum, usercmd_t *cmd )
-
-	G_GET_ENTITY_TOKEN,	// qboolean ( char *buffer, int bufferSize )
-	// Retrieves the next string token from the entity spawn text, returning
-	// false when all tokens have been parsed.
-	// This should only be done at GAME_INIT time.
-
-	G_GETSAVEGAMENANE,
-
-	G_FS_GETFILELIST,
-	G_DEBUG_POLYGON_CREATE,
-	G_DEBUG_POLYGON_DELETE,
-	G_REAL_TIME,
-	G_SNAPVECTOR,
-
-	G_OPENSAVEREAD,
-	G_OPENSAVEWRITE,
-
-	G_SETPERSISTANT,
-	G_GETPERSISTANT,
-
-	G_TRACECAPSULE,	// ( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask );
-	G_ENTITY_CONTACTCAPSULE,	// ( const vec3_t mins, const vec3_t maxs, const gentity_t *ent );
-	
-	// 1.32
-	G_FS_SEEK,
-
+	// System
+	void		(*Sys_SnapVector)(float* v);
 } gameImport_t;
 
 
 //
 // functions exported by the game subsystem
 //
-typedef enum {
-	GAME_INIT,	// ( int levelTime, int randomSeed, int restart );
+typedef struct {
+	void (*G_InitGame) ( int levelTime, int randomSeed, int restart );
 	// init and shutdown will be called every single level
 	// The game should call G_GET_ENTITY_TOKEN to parse through all the
 	// entity configuration text and spawn gentities.
 
-	GAME_SHUTDOWN,	// (void);
+	void (*G_ShutdownGame)(int restart);
 
-	GAME_CLIENT_CONNECT,	// ( int clientNum, qboolean firstTime, qboolean isBot );
+	char *(*ClientConnect) ( int clientNum, qboolean firstTime, qboolean isBot );
+	
 	// return NULL if the client is allowed to connect, otherwise return
 	// a text string with the reason for denial
 
-	GAME_CLIENT_BEGIN,				// ( int clientNum );
+	void (*ClientBegin) ( int clientNum );
 
-	GAME_CLIENT_USERINFO_CHANGED,	// ( int clientNum );
+	void (*ClientUserinfoChanged)( int clientNum );
 
-	GAME_CLIENT_DISCONNECT,			// ( int clientNum );
+	void (*ClientDisconnect)( int clientNum );
 
-	GAME_CLIENT_COMMAND,			// ( int clientNum );
+	void (*ClientCommand) ( int clientNum );
 
-	GAME_CLIENT_THINK,				// ( int clientNum );
+	void (*ClientThink) ( int clientNum );
 
-	GAME_RUN_FRAME,					// ( int levelTime );
+	void (*G_RunFrame) ( int levelTime );
 
-	GAME_CONSOLE_COMMAND,			// ( void );
-	// ConsoleCommand will be called when a command has been issued
-	// that is not recognized as a builtin function.
-	// The game can issue trap_argc() / trap_argv() commands to get the command
-	// and parameters.  Return qfalse if the game doesn't recognize it as a command.
-
-	BOTAI_START_FRAME				// ( int time );
+	qboolean (*ConsoleCommand) ( void );
 } gameExport_t;
 

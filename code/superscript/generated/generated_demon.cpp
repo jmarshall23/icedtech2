@@ -413,7 +413,7 @@ void demon1_die6(gentity_t *self) {
 	static mmove_t move = { death6, death6, &frame, demon1_die7};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 }
 // WARNING: No AI state change specified, defaulting to ai_stand
 void demon1_die7(gentity_t *self) {
@@ -463,7 +463,7 @@ void monster_demon1(gentity_t *self) {
 	precache_sound ("demon/sight2.wav");
 
 		self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->movetype = MOVETYPE_STEP;
 

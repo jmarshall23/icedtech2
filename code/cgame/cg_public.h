@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 
-
 #define	CMD_BACKUP			64	
 #define	CMD_MASK			(CMD_BACKUP - 1)
 // allow a lot of command backups for very fast systems
@@ -69,144 +68,93 @@ functions imported from the main executable
 ==================================================================
 */
 
-#define	CGAME_IMPORT_API_VERSION	1004
+#define	CGAME_IMPORT_API_VERSION	2001
 
-typedef enum {
-	CG_PRINT,
-	CG_ERROR,
-	CG_MILLISECONDS,
-	CG_CVAR_REGISTER,
-	CG_CVAR_UPDATE,
-	CG_CVAR_SET,
-	CG_CVAR_VARIABLESTRINGBUFFER,
-	CG_ARGC,
-	CG_ARGV,
-	CG_ARGS,
-	CG_FS_FOPENFILE,
-	CG_FS_READ,
-	CG_FS_WRITE,
-	CG_FS_FCLOSEFILE,
-	CG_SENDCONSOLECOMMAND,
-	CG_ADDCOMMAND,
-	CG_DRAWBIGSTRING,
-	CG_SENDCLIENTCOMMAND,
-	CG_UPDATESCREEN,
-	CG_CM_LOADMAP,
-	CG_CM_NUMINLINEMODELS,
-	CG_CM_INLINEMODEL,
-	CG_CM_LOADMODEL,
-	CG_CM_TEMPBOXMODEL,
-	CG_CM_POINTCONTENTS,
-	CG_CM_TRANSFORMEDPOINTCONTENTS,
-	CG_CM_BOXTRACE,
-	CG_CM_TRANSFORMEDBOXTRACE,
-	CG_CM_MARKFRAGMENTS,
-	CG_S_STARTSOUND,
-	CG_S_STARTSOUNDEX,  //----(SA)	added
-	CG_S_STARTLOCALSOUND,
-	CG_S_CLEARLOOPINGSOUNDS,
-	CG_S_ADDLOOPINGSOUND,
-	CG_S_UPDATEENTITYPOSITION,
-	// Ridah, talking animations
-	CG_S_GETVOICEAMPLITUDE,
-	// done.
-	CG_S_RESPATIALIZE,
-	CG_S_REGISTERSOUND,
-	CG_S_STARTBACKGROUNDTRACK,
-	CG_S_FADESTREAMINGSOUND,    //----(SA)	modified
-	CG_S_FADEALLSOUNDS,         //----(SA)	added for fading out everything
-	CG_S_ISSOUNDPLAYING,
-	CG_S_STARTSTREAMINGSOUND,
-	CG_R_LOADWORLDMAP,
-	CG_R_REGISTERMODEL,
-	CG_R_REGISERMODELEX,
-	CG_R_REGISTERSKIN,
-	CG_R_REGISTERSHADER,
-	CG_R_CLEARSCENE,
-	CG_R_ADDREFENTITYTOSCENE,
-	CG_R_ADDPOLYTOSCENE,
-	CG_R_ADDLIGHTTOSCENE,
-	CG_R_ADDSPOTLIGHTTOSCENE,
-	CG_R_RENDERSCENE,
-	CG_R_SETCOLOR,
-	CG_R_DRAWSTRETCHPIC,
-	CG_R_MODELBOUNDS,
-	CG_R_LERPTAG,
-	CG_GETGLCONFIG,
-	CG_GETGAMESTATE,
-	CG_GETCURRENTSNAPSHOTNUMBER,
-	CG_GETSNAPSHOT,
-	CG_GETSERVERCOMMAND,
-	CG_GETCURRENTCMDNUMBER,
-	CG_GETUSERCMD,
-	CG_SETUSERCMDVALUE,
-	CG_R_REGISTERSHADERNOMIP,
-	CG_MEMORY_REMAINING,
-	CG_R_REGISTERFONT,
-	CG_KEY_ISDOWN,
-	CG_KEY_GETCATCHER,
-	CG_KEY_SETCATCHER,
-	CG_KEY_GETKEY,
+typedef struct {
+	// Client specific API
+	void	(*CL_GetGlconfig)(glconfig_t* config);
+	void	(*CL_GetGameState)(gameState_t* gs);
+	void	(*CL_GetCurrentSnapshotNumber)(int* snapshotNumber, int* serverTime);
+	qboolean (*CL_GetSnapshot)(int snapshotNumber, snapshot_t* snapshot);
+	qboolean (*CL_GetServerCommand)(int serverCommandNumber);
+	int		(*CL_GetCurrentCmdNumber)(void);
+	qboolean (*CL_GetUserCmd)(int cmdNumber, usercmd_t* ucmd);
+	void (*CL_SetUserCmdValue)(int userCmdValue, float sensitivityScale);
+	int	(*Hunk_MemoryRemaining)(void);
 
-	CG_GETWORLDSHADER,
-	CG_GETNUMWORLDSHADERS,
+	// Common
+	void	(*Com_Error)(int level, const char* error, ...);
+	void	(*Com_Printf)(const char* msg, ...);
+	int		(*Com_RealTime)(qtime_t* qtime);
+	int		(*Sys_Milliseconds)(void);
+	void	(*SCR_UpdateScreen)(void);
 
- 	CG_PC_ADD_GLOBAL_DEFINE,
-	CG_PC_LOAD_SOURCE,
-	CG_PC_FREE_SOURCE,
-	CG_PC_READ_TOKEN,
-	CG_PC_SOURCE_FILE_AND_LINE,
-	CG_S_STOPBACKGROUNDTRACK,
-	CG_UI_FORCEACTIVEMENU,
-	CG_REAL_TIME,
-	CG_SNAPVECTOR,
-	CG_REMOVECOMMAND,
-	CG_R_LIGHTFORPOINT,
-	CG_CIN_PLAYCINEMATIC,
-	CG_CIN_STOPCINEMATIC,
-	CG_CIN_RUNCINEMATIC,
-	CG_CIN_DRAWCINEMATIC,
-	CG_CIN_SETEXTENTS,
-	CG_R_REMAP_SHADER,
-	CG_R_FINISHDXRLOADING,
-	CG_R_SHUTDOWNRAYTRACINGMAP,
-	CG_S_ADDREALLOOPINGSOUND,
-	CG_S_STOPLOOPINGSOUND,
-	CG_S_STOPSTREAMINGSOUND,    //----(SA)	added
+	// Key input
+	qboolean(*Key_IsDown)(int keynum);
+	int (*Key_GetCatcher)(void);
+	void (*Key_SetCatcher)(int catcher);
+	int (*Key_GetKey)(const char* binding);
 
-	CG_CM_TEMPCAPSULEMODEL,
-	CG_CM_CAPSULETRACE,
-	CG_CM_TRANSFORMEDCAPSULETRACE,
-	CG_R_ADDADDITIVELIGHTTOSCENE,
-	CG_GET_ENTITY_TOKEN,
-	CG_R_ADDPOLYSTOSCENE,
-	CG_R_INPVS,
-	CG_R_SETFOGPARMS,
-	// 1.32
-	CG_FS_SEEK,
+	// Cvars
+	void	(*Cvar_Register)(vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags);
+	void	(*Cvar_Update)(vmCvar_t* vmCvar);
+	void 	(*Cvar_Set)(const char* var_name, const char* value);
+	void	(*Cvar_VariableStringBuffer)(const char* var_name, char* buffer, int bufsize);
+	int		(*Cmd_Argc)(void);
+	void	(*Cmd_ArgvBuffer)(int arg, char* buffer, int bufferLength);
+	void	(*Cmd_ArgsBuffer)(char* buffer, int bufferLength);
 
-	CG_R_REGISTERCUSTOMMODEL,
+	// FileSystem
+	int		(*FS_FOpenFileByMode)(const char* qpath, fileHandle_t* f, fsMode_t mode);
+	int		(*FS_Read2)(void* buffer, int len, fileHandle_t f);
+	int		(*FS_Write)(const void* buffer, int len, fileHandle_t f);
+	int		(*FS_Seek)(fileHandle_t f, long offset, int origin);
+	void	(*FS_FCloseFile)(fileHandle_t f);
 
-	CG_R_MODELNUMFRAMES,
+	// Command System
+	void	(*Cbuf_AddText)(const char* text);
+	void	(*CL_AddCgameCommand)(const char* cmdName);
+	void	(*Cmd_RemoveCommand)(const char* cmd_name);
+	void	(*CL_AddReliableCommand)(const char* cmd);
 
-/*
-	CG_LOADCAMERA,
-	CG_STARTCAMERA,
-	CG_GETCAMERAINFO,
-*/
+	// Renderer
+	refexport_t* renderer;
 
-	CG_MEMSET = 300,
-	CG_MEMCPY,
-	CG_STRNCPY,
-	CG_SIN,
-	CG_COS,
-	CG_ATAN2,
-	CG_SQRT,
-	CG_FLOOR,
-	CG_CEIL,
-	CG_TESTPRINTINT,
-	CG_TESTPRINTFLOAT,
-	CG_ACOS
+	// User Interface
+	void	(*UI_Text_Paint)(float x, float y, float scale, vec4_t color, const char* text);
+	void	(*UI_ForceActiveCustomMenu)(const char* name);
+
+	// Collision Manager
+	void	(*CL_CM_LoadMap)(const char* mapname);
+	int		(*CM_NumInlineModels)(void);
+	clipHandle_t(*CM_InlineModel)(int index);
+	clipHandle_t(*CM_TempBoxModel)(const vec3_t mins, const vec3_t maxs, int capsule);
+	int			(*CM_PointContents)(const vec3_t p, clipHandle_t model);
+	int			(*CM_TransformedPointContents)(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
+	void		(*CM_BoxTrace)(trace_t* results, const vec3_t start, const vec3_t end, vec3_t mins, vec3_t maxs, clipHandle_t model, int brushmask, int capsule);
+	void		(*CM_TransformedBoxTrace)(trace_t* results, const vec3_t start, const vec3_t end, vec3_t mins, vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles, int capsule);
+
+	// Sound System
+	void		(*S_StartSound)(vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx);
+	void		(*S_StartSoundEx)(vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx, int flags);
+	void		(*S_StartLocalSound)(sfxHandle_t sfx, int channelNum);
+	void		(*S_StopEntStreamingSound)(int entNum);
+	void		(*S_UpdateEntityPosition)(int entityNum, const vec3_t origin);
+	int			(*S_GetVoiceAmplitude)(int entityNum);
+	void		(*S_Respatialize)(int entityNum, const vec3_t origin, vec3_t axis[3], int inwater);
+	sfxHandle_t	(*S_RegisterSound)(const char* sample);
+	void		(*S_StartBackgroundTrack)(const char* intro, const char* loop);
+	void		(*S_FadeStreamingSound)(float targetvol, int time, int ssNum);
+	void		(*S_StartStreamingSound)(const char* intro, const char* loop, int entityNum, int channel, int attenuation);
+	void		(*S_FadeAllSounds)(float targetvol, int time);
+	qboolean	(*S_IsSoundPlaying)(sfxHandle_t sfx);
+	void		(*S_StopBackgroundTrack)(void);
+	void		(*S_AddLoopingSound)(int entityNum, const vec3_t origin, const vec3_t velocity, const int range, sfxHandle_t sfx, int volume);
+	void		(*S_ClearLoopingSounds)(qboolean killall);
+
+	// System
+	void		(*Sys_SnapVector)(float* v);
+
 } cgameImport_t;
 
 
@@ -218,9 +166,8 @@ functions exported to the main executable
 ==================================================================
 */
 
-typedef enum {
-	CG_INIT,
-//	void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum )
+typedef struct {
+	void (*CG_Init)(int serverMessageNum, int serverCommandSequence, int clientNum);
 	// called when the level loads or when the renderer is restarted
 	// all media should be registered at this time
 	// cgame will display loading status by calling SCR_Update, which
@@ -228,35 +175,24 @@ typedef enum {
 	// reliableCommandSequence will be 0 on fresh loads, but higher for
 	// demos, tourney restarts, or vid_restarts
 
-	CG_SHUTDOWN,
-//	void (*CG_Shutdown)( void );
+	void (*CG_Shutdown)( void );
 	// oportunity to flush and close any open files
 
-	CG_CONSOLE_COMMAND,
-//	qboolean (*CG_ConsoleCommand)( void );
+	qboolean (*CG_ConsoleCommand)( void );
+
 	// a console command has been issued locally that is not recognized by the
 	// main game system.
 	// use Cmd_Argc() / Cmd_Argv() to read the command, return qfalse if the
 	// command is not known to the game
-
-	CG_DRAW_ACTIVE_FRAME,
-//	void (*CG_DrawActiveFrame)( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
+	void (*CG_DrawActiveFrame)( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
 	// Generates and draws a game scene and status information at the given time.
 	// If demoPlayback is set, local movement prediction will not be enabled
-
-	CG_CROSSHAIR_PLAYER,
-//	int (*CG_CrosshairPlayer)( void );
-
-	CG_LAST_ATTACKER,
-//	int (*CG_LastAttacker)( void );
-
-	CG_KEY_EVENT, 
-//	void	(*CG_KeyEvent)( int key, qboolean down );
-
-	CG_MOUSE_EVENT,
-//	void	(*CG_MouseEvent)( int dx, int dy );
-	CG_EVENT_HANDLING
-//	void (*CG_EventHandling)(int type);
+	
+	int  (*CG_CrosshairPlayer)( void );
+	int  (*CG_LastAttacker)( void );
+	void (*CG_KeyEvent)( int key, qboolean down );
+	void (*CG_MouseEvent)( int dx, int dy );
+	void (*CG_EventHandling)(int type);
 } cgameExport_t;
 
 //----------------------------------------------

@@ -35,7 +35,7 @@ qboolean M_CheckBottom(gentity_t* ent)
 		{
 			start[0] = x ? maxs[0] : mins[0];
 			start[1] = y ? maxs[1] : mins[1];
-			if ( trap_PointContents(start, -1) != CONTENTS_SOLID)
+			if ( engine->SV_PointContents(start, -1) != CONTENTS_SOLID)
 				goto realcheck;
 		}
 
@@ -53,7 +53,7 @@ realcheck:
 	start[0] = stop[0] = (mins[0] + maxs[0]) * 0.5;
 	start[1] = stop[1] = (mins[1] + maxs[1]) * 0.5;
 	stop[2] = start[2] - 2 * STEPSIZE;
-	trap_Trace(&trace, start, vec3_origin, vec3_origin, stop, ent - g_entities, MASK_MONSTERSOLID);
+	engine->SV_Trace(&trace, start, vec3_origin, vec3_origin, stop, ent - g_entities, MASK_MONSTERSOLID);
 
 	if (trace.fraction == 1.0)
 		return qfalse;
@@ -66,7 +66,7 @@ realcheck:
 			start[0] = stop[0] = x ? maxs[0] : mins[0];
 			start[1] = stop[1] = y ? maxs[1] : mins[1];
 
-			trap_Trace(&trace, start, vec3_origin, vec3_origin, stop, ent - g_entities, MASK_MONSTERSOLID);
+			engine->SV_Trace(&trace, start, vec3_origin, vec3_origin, stop, ent - g_entities, MASK_MONSTERSOLID);
 
 			if (trace.fraction != 1.0 && trace.endpos[2] > bottom)
 				bottom = trace.endpos[2];
@@ -137,7 +137,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 						neworg[2] += dz;
 				}
 			}
-			trap_Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, neworg, ent - g_entities, MASK_MONSTERSOLID);
+			engine->SV_Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, neworg, ent - g_entities, MASK_MONSTERSOLID);
 
 			// fly monsters don't enter water voluntarily
 			if (ent->flags & FL_FLY)
@@ -147,7 +147,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 					test[0] = trace.endpos[0];
 					test[1] = trace.endpos[1];
 					test[2] = trace.endpos[2] + ent->r.mins[2] + 1;
-					contents = trap_PointContents(test, -1);
+					contents = engine->SV_PointContents(test, -1);
 					if (contents & MASK_WATER)
 						return qfalse;
 				}
@@ -161,7 +161,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 					test[0] = trace.endpos[0];
 					test[1] = trace.endpos[1];
 					test[2] = trace.endpos[2] + ent->r.mins[2] + 1;
-					contents = trap_PointContents(test, -1);
+					contents = engine->SV_PointContents(test, -1);
 					if (!(contents & MASK_WATER))
 						return qfalse;
 				}
@@ -172,7 +172,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 				VectorCopy(trace.endpos, ent->r.currentOrigin);
 				if (relink)
 				{
-					trap_LinkEntity(ent);
+					engine->SV_LinkEntity(ent);
 					G_TouchTriggers(ent);
 				}
 				return qtrue;
@@ -195,7 +195,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 	VectorCopy(neworg, end);
 	end[2] -= stepsize * 2;
 
-	trap_Trace(&trace, neworg, ent->r.mins, ent->r.maxs, end, ent - g_entities, MASK_MONSTERSOLID);
+	engine->SV_Trace(&trace, neworg, ent->r.mins, ent->r.maxs, end, ent - g_entities, MASK_MONSTERSOLID);
 
 	if (trace.allsolid)
 		return qfalse;
@@ -203,7 +203,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 	if (trace.startsolid)
 	{
 		neworg[2] -= stepsize;
-		trap_Trace(&trace, neworg, ent->r.mins, ent->r.maxs, end, ent - g_entities, MASK_MONSTERSOLID);
+		engine->SV_Trace(&trace, neworg, ent->r.mins, ent->r.maxs, end, ent - g_entities, MASK_MONSTERSOLID);
 		if (trace.allsolid || trace.startsolid)
 			return qfalse;
 	}
@@ -215,7 +215,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 		test[0] = trace.endpos[0];
 		test[1] = trace.endpos[1];
 		test[2] = trace.endpos[2] + ent->r.mins[2] + 1;
-		contents = trap_PointContents(test, -1);
+		contents = engine->SV_PointContents(test, -1);
 
 		if (contents & MASK_WATER)
 			return qfalse;
@@ -229,7 +229,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 			VectorAdd(ent->r.currentOrigin, move, ent->r.currentOrigin);
 			if (relink)
 			{
-				trap_LinkEntity(ent);
+				engine->SV_LinkEntity(ent);
 				G_TouchTriggers(ent);
 			}
 			ent->groundentity = NULL;
@@ -249,7 +249,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 			// and is trying to correct
 			if (relink)
 			{
-				trap_LinkEntity(ent);
+				engine->SV_LinkEntity(ent);
 				G_TouchTriggers(ent);
 			}
 			return qtrue;
@@ -268,7 +268,7 @@ qboolean SV_movestep(gentity_t* ent, vec3_t move, qboolean relink)
 	// the move is ok
 	if (relink)
 	{
-		trap_LinkEntity(ent);
+		engine->SV_LinkEntity(ent);
 		G_TouchTriggers(ent);
 	}
 	return qtrue;
@@ -353,12 +353,12 @@ qboolean SV_StepDirection(gentity_t* ent, float yaw, float dist)
 		{		// not turned far enough, so don't take the step
 			VectorCopy(oldorigin, ent->r.currentOrigin);
 		}
-		trap_LinkEntity(ent);
+		engine->SV_LinkEntity(ent);
 		G_TouchTriggers(ent);
 		return qtrue;
 	}
 	//gi.linkentity(ent);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 	G_TouchTriggers(ent);
 	return qfalse;
 }

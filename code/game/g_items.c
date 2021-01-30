@@ -84,7 +84,7 @@ void SP_health(gentity_t* self) {
 	VectorSet(self->r.mins, 0, 0, 0);
 	VectorSet(self->r.maxs, 32, 32, 56);
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -160,7 +160,7 @@ void SP_item_armor1(gentity_t* self) {
 	self->armortype = 0;
 
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -186,7 +186,7 @@ void SP_item_armor2(gentity_t* self) {
 	self->armortype = 1;
 
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -212,7 +212,7 @@ void SP_item_armorinv(gentity_t* self) {
 	self->armortype = 2;
 
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -301,7 +301,7 @@ void SP_item_shells(gentity_t* self) {
 
 	self->itemWeapon = WP_SHOTGUN;
 	
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -338,7 +338,7 @@ void SP_item_nails(gentity_t* self) {
 
 	self->itemWeapon = WP_NAILGUN;
 
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -383,7 +383,7 @@ void SP_weapon_supershotgun(gentity_t* self) {
 	VectorSet(self->r.maxs, 16, 16, 56);
 	self->r.contents = CONTENTS_TRIGGER;
 	self->noise1 = G_SoundIndex("sound/weapons/pkup.wav");
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -405,7 +405,7 @@ void SP_weapon_nailgun(gentity_t* self) {
 	VectorSet(self->r.maxs, 16, 16, 56);
 	self->r.contents = CONTENTS_TRIGGER;
 	self->noise1 = G_SoundIndex("sound/weapons/pkup.wav");
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -427,7 +427,7 @@ void SP_weapon_supernailgun(gentity_t* self) {
 	VectorSet(self->r.maxs, 16, 16, 56);
 	self->r.contents = CONTENTS_TRIGGER;
 	self->noise1 = G_SoundIndex("sound/weapons/pkup.wav");
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -449,7 +449,7 @@ void SP_weapon_grenadelauncher(gentity_t* self) {
 	VectorSet(self->r.maxs, 16, 16, 56);
 	self->r.contents = CONTENTS_TRIGGER;
 	self->noise1 = G_SoundIndex("sound/weapons/pkup.wav");
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -471,7 +471,7 @@ void SP_weapon_rocketlauncher(gentity_t* self) {
 	VectorSet(self->r.maxs, 16, 16, 56);
 	self->r.contents = CONTENTS_TRIGGER;
 	self->noise1 = G_SoundIndex("sound/weapons/pkup.wav");
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -493,7 +493,7 @@ void SP_weapon_lightning(gentity_t* self) {
 	VectorSet(self->r.maxs, 16, 16, 56);
 	self->r.contents = CONTENTS_TRIGGER;
 	self->noise1 = G_SoundIndex("sound/weapons/pkup.wav");
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	G_SetOrigin(self, self->s.origin);
 	VectorCopy(self->s.angles, self->s.apos.trBase);
@@ -566,7 +566,7 @@ void item_key1(gentity_t *self)
 	VectorSet(self->r.mins, -16, -16, -24);
 	VectorSet(self->r.maxs, 16, 16, 32);
 	self->r.contents = CONTENTS_TRIGGER;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->s.clientTransformAnim = CLIENT_TRANSFORM_BOB_AND_ROTATE;
 
@@ -610,7 +610,7 @@ void item_key2(gentity_t* self)
 	VectorSet(self->r.mins, -16, -16, -24);
 	VectorSet(self->r.maxs, 16, 16, 32);
 	self->r.contents = CONTENTS_TRIGGER;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->s.clientTransformAnim = CLIENT_TRANSFORM_BOB_AND_ROTATE;
 

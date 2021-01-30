@@ -60,9 +60,9 @@ gentity_t	*G_TestEntityPosition( gentity_t *ent ) {
 		mask = MASK_SOLID;
 	}
 	if ( ent->client ) {
-		trap_Trace( &tr, ent->client->ps.origin, ent->r.mins, ent->r.maxs, ent->client->ps.origin, ent->s.number, mask );
+		engine->SV_Trace( &tr, ent->client->ps.origin, ent->r.mins, ent->r.maxs, ent->client->ps.origin, ent->s.number, mask );
 	} else {
-		trap_Trace( &tr, ent->s.pos.trBase, ent->r.mins, ent->r.maxs, ent->s.pos.trBase, ent->s.number, mask );
+		engine->SV_Trace( &tr, ent->s.pos.trBase, ent->r.mins, ent->r.maxs, ent->s.pos.trBase, ent->s.number, mask );
 	}
 	
 	if (tr.startsolid)
@@ -177,7 +177,7 @@ qboolean	G_TryPushingEntity( gentity_t *check, gentity_t *pusher, vec3_t move, v
 		} else {
 			VectorCopy( check->s.pos.trBase, check->r.currentOrigin );
 		}
-		trap_LinkEntity (check);
+		engine->SV_LinkEntity (check);
 		return qtrue;
 	}
 
@@ -211,7 +211,7 @@ qboolean G_CheckProxMinePosition( gentity_t *check ) {
 
 	VectorMA(check->s.pos.trBase, 0.125, check->movedir, start);
 	VectorMA(check->s.pos.trBase, 2, check->movedir, end);
-	trap_Trace( &tr, start, NULL, NULL, end, check->s.number, MASK_SOLID );
+	engine->SV_Trace( &tr, start, NULL, NULL, end, check->s.number, MASK_SOLID );
 	
 	if (tr.startsolid || tr.fraction < 1)
 		return qfalse;
@@ -247,7 +247,7 @@ qboolean G_TryPushingProxMine( gentity_t *check, gentity_t *pusher, vec3_t move,
 	ret = G_CheckProxMinePosition( check );
 	if (ret) {
 		VectorCopy( check->s.pos.trBase, check->r.currentOrigin );
-		trap_LinkEntity (check);
+		engine->SV_LinkEntity (check);
 	}
 	return ret;
 }
@@ -306,14 +306,14 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 	}
 
 	// unlink the pusher so we don't get it in the entityList
-	trap_UnlinkEntity( pusher );
+	engine->SV_UnlinkEntity( pusher );
 
-	listedEntities = trap_EntitiesInBox( totalMins, totalMaxs, entityList, MAX_GENTITIES );
+	listedEntities = engine->SV_AreaEntities( totalMins, totalMaxs, entityList, MAX_GENTITIES );
 
 	// move the pusher to it's final position
 	VectorAdd( pusher->r.currentOrigin, move, pusher->r.currentOrigin );
 	VectorAdd( pusher->r.currentAngles, amove, pusher->r.currentAngles );
-	trap_LinkEntity( pusher );
+	engine->SV_LinkEntity( pusher );
 
 	// see if any solid entities are inside the final position
 	for ( e = 0 ; e < listedEntities ; e++ ) {
@@ -405,7 +405,7 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 				p->ent->client->ps.delta_angles[YAW] = p->deltayaw;
 				VectorCopy (p->origin, p->ent->client->ps.origin);
 			}
-			trap_LinkEntity (p->ent);
+			engine->SV_LinkEntity (p->ent);
 		}
 		return qfalse;
 	}
@@ -448,7 +448,7 @@ void G_MoverTeam( gentity_t *ent ) {
 			part->s.apos.trTime += level.time - level.previousTime;
 			BG_EvaluateTrajectory( &part->s.pos, level.time, part->r.currentOrigin );
 			BG_EvaluateTrajectory( &part->s.apos, level.time, part->r.currentAngles );
-			trap_LinkEntity( part );
+			engine->SV_LinkEntity( part );
 		}
 
 		// if the pusher has a "blocked" function, call it
@@ -548,7 +548,7 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 		break;
 	}
 	BG_EvaluateTrajectory( &ent->s.pos, level.time, ent->r.currentOrigin );	
-	trap_LinkEntity( ent );
+	engine->SV_LinkEntity( ent );
 }
 
 /*
@@ -626,7 +626,7 @@ void Reached_BinaryMover( gentity_t *ent ) {
 
 		// close areaportals
 		if ( ent->teammaster == ent || !ent->teammaster ) {
-			trap_AdjustAreaPortalState( ent, qfalse );
+			engine->SV_AdjustAreaPortalState( ent, qfalse );
 		}
 	} else {
 		G_Error( "Reached_BinaryMover: bad moverState" );
@@ -666,7 +666,7 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 
 		// open areaportal
 		if ( ent->teammaster == ent || !ent->teammaster ) {
-			trap_AdjustAreaPortalState( ent, qtrue );
+			engine->SV_AdjustAreaPortalState( ent, qtrue );
 		}
 		return;
 	}
@@ -772,7 +772,7 @@ void InitMover( gentity_t *ent ) {
 	ent->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	ent->s.eType = ET_MOVER;
 	VectorCopy (ent->pos1, ent->r.currentOrigin);
-	trap_LinkEntity (ent);
+	engine->SV_LinkEntity (ent);
 
 	ent->s.pos.trType = TR_STATIONARY;
 	VectorCopy( ent->pos1, ent->s.pos.trBase );
@@ -806,7 +806,7 @@ A bmodel that just sits there, doing nothing.  Can be used for conditional walls
 "light"		constantLight radius
 */
 void SP_func_static( gentity_t *ent ) {
-	trap_SetBrushModel( ent, ent->model );
+	engine->SV_SetBrushModel( ent, ent->model );
 	InitMover( ent );
 	VectorCopy( ent->s.origin, ent->s.pos.trBase );
 	VectorCopy( ent->s.origin, ent->r.currentOrigin );
@@ -852,14 +852,14 @@ void SP_func_rotating (gentity_t *ent) {
 		ent->damage = 2;
 	}
 
-	trap_SetBrushModel( ent, ent->model );
+	engine->SV_SetBrushModel( ent, ent->model );
 	InitMover( ent );
 
 	VectorCopy( ent->s.origin, ent->s.pos.trBase );
 	VectorCopy( ent->s.pos.trBase, ent->r.currentOrigin );
 	VectorCopy( ent->s.apos.trBase, ent->r.currentAngles );
 
-	trap_LinkEntity( ent );
+	engine->SV_LinkEntity( ent );
 }
 
 
@@ -891,7 +891,7 @@ void SP_func_bobbing (gentity_t *ent) {
 	G_SpawnInt( "dmg", "2", &ent->damage );
 	G_SpawnFloat( "phase", "0", &phase );
 
-	trap_SetBrushModel( ent, ent->model );
+	engine->SV_SetBrushModel( ent, ent->model );
 	InitMover( ent );
 
 	VectorCopy( ent->s.origin, ent->s.pos.trBase );
@@ -941,7 +941,7 @@ void SP_func_pendulum(gentity_t *ent) {
 	G_SpawnInt( "dmg", "2", &ent->damage );
 	G_SpawnFloat( "phase", "0", &phase );
 
-	trap_SetBrushModel( ent, ent->model );
+	engine->SV_SetBrushModel( ent, ent->model );
 
 	// find pendulum length
 	length = fabs( ent->r.mins[2] );

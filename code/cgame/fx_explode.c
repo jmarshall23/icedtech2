@@ -80,7 +80,7 @@ void FX_RenderExplosion(localEntity_t* le) {
 	}
 
 	// add the entity
-	trap_R_AddRefEntityToScene(ent);
+	engine->renderer->AddRefEntityToScene(ent);
 
 	// add the dlight
 	//if (ex->light) {
@@ -94,7 +94,7 @@ void FX_RenderExplosion(localEntity_t* le) {
 	//		light = 1.0 - (light - 0.5) * 2;
 	//	}
 	//	light = ex->light * light;
-	//	trap_R_AddLightToScene(ent->origin, light, ex->lightColor[0], ex->lightColor[1], ex->lightColor[2], LDAT_QUADRAT);
+	//	engine->renderer->AddLightToScene(ent->origin, light, ex->lightColor[0], ex->lightColor[1], ex->lightColor[2], LDAT_QUADRAT);
 	//}
 }
 
@@ -162,5 +162,5 @@ FX_RocketExplosion
 void FX_RocketExplosion(vec3_t origin) {
 	FX_AddExplosion(origin, 400, 300, 700);
 
-	trap_S_StartSound(NULL, ENTITYNUM_NONE, CHAN_VOICE, CG_CustomSound(ENTITYNUM_NONE, "sound/weapons/r_exp3.wav"));	
+	engine->S_StartSound(NULL, ENTITYNUM_NONE, CHAN_VOICE, CG_CustomSound(ENTITYNUM_NONE, "sound/weapons/r_exp3.wav"));	
 }

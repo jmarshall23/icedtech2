@@ -78,7 +78,7 @@ void SP_func_button(gentity_t* ent) {
 	VectorCopy(ent->s.origin, ent->pos1);
 
 	// calculate second position
-	trap_SetBrushModel(ent, ent->model);
+	engine->SV_SetBrushModel(ent, ent->model);
 
 	G_SpawnFloat("lip", "4", &lip);
 

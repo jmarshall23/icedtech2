@@ -89,7 +89,7 @@ void SpawnPlatTrigger(gentity_t* ent) {
 	VectorCopy(tmin, trigger->r.mins);
 	VectorCopy(tmax, trigger->r.maxs);
 
-	trap_LinkEntity(trigger);
+	engine->SV_LinkEntity(trigger);
 }
 
 
@@ -130,7 +130,7 @@ void SP_func_plat(gentity_t* ent) {
 	G_SpawnFloat("lip", "8", &lip);
 
 	// create second position
-	trap_SetBrushModel(ent, ent->model);
+	engine->SV_SetBrushModel(ent, ent->model);
 
 	if (!G_SpawnFloat("height", "0", &height)) {
 		height = (ent->r.maxs[2] - ent->r.mins[2]) - lip;

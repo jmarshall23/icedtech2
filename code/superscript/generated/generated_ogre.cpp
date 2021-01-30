@@ -719,7 +719,7 @@ void ogre_die3(gentity_t *self) {
 	static mmove_t move = { death3, death3, &frame, ogre_die4};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 
 }
@@ -808,7 +808,7 @@ void ogre_bdie3(gentity_t *self) {
 	static mmove_t move = { bdeath3, bdeath3, &frame, ogre_bdie4};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 
 }
@@ -890,7 +890,7 @@ void monster_ogre(gentity_t *self) {
 	precache_sound ("ogre/ogwake.wav");
 
 		self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->movetype = MOVETYPE_STEP;
 

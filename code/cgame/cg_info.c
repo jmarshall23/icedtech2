@@ -68,7 +68,7 @@ CG_LoadingString
 void CG_LoadingString( const char *s ) {
 	Q_strncpyz( cg.infoScreenText, s, sizeof( cg.infoScreenText ) );
 
-	trap_UpdateScreen();
+	engine->SCR_UpdateScreen();
 }
 
 /*
@@ -82,7 +82,7 @@ void CG_LoadingItem( int itemNum ) {
 	//item = &bg_itemlist[itemNum];
 	//
 	//if ( item->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS ) {
-	//	loadingItemIcons[loadingItemIconCount++] = trap_R_RegisterShaderNoMip( item->icon );
+	//	loadingItemIcons[loadingItemIconCount++] = engine->renderer->RegisterShaderNoMip( item->icon );
 	//}
 	//
 	//CG_LoadingString( item->pickup_name );
@@ -113,14 +113,14 @@ void CG_LoadingClient( int clientNum ) {
 
 		Com_sprintf( iconName, MAX_QPATH, "models/players/%s/icon_%s.tga", model, skin );
 		
-		loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+		loadingPlayerIcons[loadingPlayerIconCount] = engine->renderer->RegisterShaderNoMip( iconName );
 		if ( !loadingPlayerIcons[loadingPlayerIconCount] ) {
 			Com_sprintf( iconName, MAX_QPATH, "models/players/characters/%s/icon_%s.tga", model, skin );
-			loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+			loadingPlayerIcons[loadingPlayerIconCount] = engine->renderer->RegisterShaderNoMip( iconName );
 		}
 		if ( !loadingPlayerIcons[loadingPlayerIconCount] ) {
 			Com_sprintf( iconName, MAX_QPATH, "models/players/%s/icon_%s.tga", DEFAULT_MODEL, "default" );
-			loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+			loadingPlayerIcons[loadingPlayerIconCount] = engine->renderer->RegisterShaderNoMip( iconName );
 		}
 		if ( loadingPlayerIcons[loadingPlayerIconCount] ) {
 			loadingPlayerIconCount++;
@@ -131,7 +131,7 @@ void CG_LoadingClient( int clientNum ) {
 	Q_CleanStr( personality );
 
 	if( cgs.gametype == GT_SINGLE_PLAYER ) {
-		trap_S_RegisterSound( va( "sound/player/announce/%s.wav", personality ), qtrue );
+		engine->S_RegisterSound( va( "sound/player/announce/%s.wav", personality ), qtrue );
 	}
 
 	CG_LoadingString( personality );
@@ -161,8 +161,8 @@ void CG_DrawInformation( void ) {
 	s = Info_ValueForKey( info, "mapname" );
 
 
-	levelshot = trap_R_RegisterShaderNoMip("gfx/loadback");
-	trap_R_SetColor( NULL );
+	levelshot = engine->renderer->RegisterShaderNoMip("gfx/loadback");
+	engine->renderer->SetColor( NULL );
 	CG_DrawPic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, levelshot );
 }
 

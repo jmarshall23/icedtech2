@@ -27,8 +27,8 @@ void InitTrigger( gentity_t *self ) {
 	if (!VectorCompare (self->s.angles, vec3_origin))
 		G_SetMovedir (self->s.angles, self->movedir);
 
-	trap_SetBrushModel( self, self->model );
-	self->r.contents = CONTENTS_TRIGGER;		// replaces the -1 from trap_SetBrushModel
+	engine->SV_SetBrushModel( self, self->model );
+	self->r.contents = CONTENTS_TRIGGER;		// replaces the -1 from engine->SV_SetBrushModel
 	self->r.svFlags = SVF_NOCLIENT;
 }
 
@@ -137,7 +137,7 @@ void SP_trigger_multiple( gentity_t *ent ) {
 	ent->use = Use_Multi;
 
 	InitTrigger( ent );
-	trap_LinkEntity (ent);
+	engine->SV_LinkEntity (ent);
 }
 
 void SP_trigger_once(gentity_t* ent) {
@@ -170,7 +170,7 @@ void SP_trigger_once(gentity_t* ent) {
 	ent->use = Use_Multi;
 
 	InitTrigger(ent);
-	trap_LinkEntity(ent);
+	engine->SV_LinkEntity(ent);
 }
 
 void SP_trigger_counter(gentity_t* ent) {
@@ -192,7 +192,7 @@ void trigger_changelevel(gentity_t* self, gentity_t* other, trace_t* trace) {
 	if (self->nextMapName == NULL)
 		G_Error("No next map set!\n");
 
-	trap_SendConsoleCommand(EXEC_APPEND, va("map %s\n", self->nextMapName));
+	engine->Cbuf_ExecuteText(EXEC_APPEND, va("map %s\n", self->nextMapName));
 
 	// Save the persistant variables for the next level.
 	G_UpdatePersistant();
@@ -217,8 +217,8 @@ void trigger_setskill(gentity_t* self, gentity_t* other, trace_t* trace) {
 	if (self->message == NULL)
 		G_Error("No skill set!\n");
 
-	trap_Cvar_Set("skill", self->message);
-	trap_Cvar_Update(&g_skill);
+	engine->Cvar_Set("skill", self->message);
+	engine->Cvar_Update(&g_skill);
 }
 
 void SP_trigger_setskill(gentity_t* ent) {
@@ -369,7 +369,7 @@ void SP_trigger_push( gentity_t *self ) {
 	self->touch = trigger_push_touch;
 	self->think = AimAtTarget;
 	self->nextthink = level.time + FRAMETIME;
-	trap_LinkEntity (self);
+	engine->SV_LinkEntity (self);
 }
 
 
@@ -500,7 +500,7 @@ void SP_trigger_teleport( gentity_t *self ) {
 	self->s.eType = ET_TELEPORT_TRIGGER;
 	self->touch = trigger_teleporter_touch;
 
-	trap_LinkEntity (self);
+	engine->SV_LinkEntity (self);
 }
 
 
@@ -526,9 +526,9 @@ NO_PROTECTION	*nothing* stops the damage
 */
 void hurt_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	if ( self->r.linked ) {
-		trap_UnlinkEntity( self );
+		engine->SV_UnlinkEntity( self );
 	} else {
-		trap_LinkEntity( self );
+		engine->SV_LinkEntity( self );
 	}
 }
 
@@ -579,7 +579,7 @@ void SP_trigger_hurt( gentity_t *self ) {
 
 	// link in to the world if starting active
 	if ( ! (self->spawnflags & 1) ) {
-		trap_LinkEntity (self);
+		engine->SV_LinkEntity (self);
 	}
 }
 

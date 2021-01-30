@@ -76,7 +76,7 @@ void CG_Monster(centity_t* cent) {
 		offset[2] += 20.0f;
 
 		AngleVectors(cent->lerpAngles, forward, right, up);
-		trap_R_AddLightToScene(offset, s1->lightRadius, s1->lightColor[0], s1->lightColor[1], s1->lightColor[2], s1->generic1);
+		engine->renderer->AddLightToScene(offset, s1->lightRadius, s1->lightColor[0], s1->lightColor[1], s1->lightColor[2], s1->generic1);
 	}
 
 	VectorCopy(cent->lerpOrigin, ent.origin);
@@ -107,5 +107,5 @@ void CG_Monster(centity_t* cent) {
 	}
 
 	// add to refresh list
-	trap_R_AddRefEntityToScene(&ent);
+	engine->renderer->AddRefEntityToScene(&ent);
 }

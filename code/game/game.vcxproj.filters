@@ -54,9 +54,6 @@
     <ClCompile Include="g_svcmds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_syscalls.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="g_target.c">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -524,7 +524,7 @@ void army_die3(gentity_t *self) {
 	static mmove_t move = { death3, death3, &frame, army_die4};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 self->ammo_shells = 5;DropBackpack(self);}
 // WARNING: No AI state change specified, defaulting to ai_stand
 void army_die4(gentity_t *self) {
@@ -586,7 +586,7 @@ void army_cdie3(gentity_t *self) {
 	static mmove_t move = { deathc3, deathc3, &frame, army_cdie4};
 	self->monsterinfo.currentmove = &move;
 	self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 self->ammo_shells = 5;DropBackpack(self);}
 void army_cdie4(gentity_t *self) {
 	static mframe_t frame = { ai_back,13, NULL };
@@ -670,7 +670,7 @@ void monster_army(gentity_t *self) {
 
 
 		self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->movetype = MOVETYPE_STEP;
 

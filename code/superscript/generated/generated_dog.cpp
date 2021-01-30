@@ -596,7 +596,7 @@ void dog_die(gentity_t *self) {
 
 	sound (self, CHAN_VOICE, "dog/ddeath.wav", 1, ATTN_NORM);
 		self->r.contents = 0;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 
 	if (random() > 0.5)
@@ -670,7 +670,7 @@ void monster_dog(gentity_t *self) {
 	precache_sound ("dog/idle.wav");
 
 		self->r.contents = CONTENTS_SOLID;
-	trap_LinkEntity(self);
+	engine->SV_LinkEntity(self);
 
 	self->movetype = MOVETYPE_STEP;
 

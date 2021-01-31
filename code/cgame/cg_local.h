@@ -291,6 +291,8 @@ typedef struct localEntity_s {
 	leBounceSoundType_t	leBounceSoundType;
 
 	refEntity_t		refEntity;		
+
+	void			(*FX_RenderCallback)(void* le);
 } localEntity_t;
 
 //======================================================================
@@ -1517,7 +1519,7 @@ void FX_SpawnWallDebrisBig(vec3_t origin, vec3_t dir, qhandle_t shader);
 void FX_RocketExplosion(vec3_t origin);
 void FX_RenderExplosion(localEntity_t* ex);
 
-void FX_AddDebris(vec3_t origin, vec3_t dir, int speed, int duration, int count, qhandle_t mesh, float size);
+void FX_AddDebris(vec3_t origin, vec3_t dir, int speed, int duration, int count, qhandle_t mesh, float size, void (*FX_RenderCallback)(localEntity_t* le));
 
 extern int cg_shaderLookup[MAX_SHADERS];
 

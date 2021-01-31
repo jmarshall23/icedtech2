@@ -147,7 +147,7 @@ void FX_AddBlood(vec3_t origin2, vec3_t dir, int duration, int count) {
 		VectorCopy(origin, re->origin);
 		AxisCopy(axisDefault, re->axis);
 
-		le->pos.trType = TR_GRAVITY;
+		le->pos.trType = TR_GRAVITY_LOW;
 		VectorCopy(origin, le->pos.trBase);
 		VectorCopy(velocity, le->pos.trDelta);
 		le->pos.trTime = cg.time;

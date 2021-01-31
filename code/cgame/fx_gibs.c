@@ -19,6 +19,26 @@ void FX_InitGibs(void) {
 
 /*
 =================
+FX_GibTick
+=================
+*/
+void FX_GibTick(localEntity_t* le) {
+	vec3_t dir;
+
+	VectorSubtract(le->refEntity.origin, le->refEntity.oldorigin, dir);
+
+	VectorNormalize(dir);
+
+	if (VectorLength(dir) == 0)
+		return;
+
+	VectorSet(dir, 0, 0, 0); // We don't want the particles to actually have a velocity, just spawn and fall. 
+
+	FX_AddBlood(le->refEntity.origin, dir, 700, 1);
+}
+
+/*
+=================
 FX_SpawnGibs
 =================
 */
@@ -38,6 +58,6 @@ void FX_SpawnGibs(vec3_t origin2) {
 		dir[2] = 1;
 		VectorNormalize(dir);
 
-		FX_AddDebris(origin, dir, 380, 3800, 1, gibModels[rand() % MAX_GIB_MODELS], 1.0f);
+		FX_AddDebris(origin, dir, 380, 3800, 1, gibModels[rand() % MAX_GIB_MODELS], 1.0f, FX_GibTick);
 	}
 }

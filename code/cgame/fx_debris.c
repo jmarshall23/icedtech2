@@ -60,6 +60,8 @@ void CG_AddDebrisElements(localEntity_t* le) {
 	float lifeFrac;
 	int t, step = 50;
 
+	VectorCopy(le->refEntity.origin, le->refEntity.oldorigin);
+
 	for (t = le->lastTrailTime + step; t < cg.time; t += step) {
 		// calculate new position
 		BG_EvaluateTrajectory(&le->pos, t, newOrigin, qfalse, -1);
@@ -113,6 +115,11 @@ void CG_AddDebrisElements(localEntity_t* le) {
 
 		le->lastTrailTime = t;
 		}
+
+	if (le->FX_RenderCallback) {
+		le->FX_RenderCallback(le);
+	}
+
 	engine->renderer->AddRefEntityToScene(&le->refEntity);
 
 }
@@ -123,7 +130,7 @@ void CG_AddDebrisElements(localEntity_t* le) {
 FX_AddDebris
 =================
 */
-void FX_AddDebris(vec3_t origin, vec3_t dir, int speed, int duration, int count, qhandle_t mesh, float size) {
+void FX_AddDebris(vec3_t origin, vec3_t dir, int speed, int duration, int count, qhandle_t mesh, float size, void	(*FX_RenderCallback)(localEntity_t* le)) {
 	localEntity_t* le;
 	refEntity_t* re;
 
@@ -147,6 +154,8 @@ void FX_AddDebris(vec3_t origin, vec3_t dir, int speed, int duration, int count,
 		le->startTime = cg.time;
 		le->endTime = le->startTime + duration + (int)((float)duration * 0.8 * crandom());
 		le->lastTrailTime = cg.time;
+
+		le->FX_RenderCallback = FX_RenderCallback;
 
 		VectorCopy(origin, re->origin);
 		AxisCopy(axisDefault, re->axis);
@@ -183,8 +192,8 @@ void FX_SpawnWallDebris(vec3_t origin, vec3_t dir, qhandle_t shader) {
 	dir2[1] = -dir[1];
 	dir2[2] = -dir[2];
 
-	FX_AddDebris(origin, dir2, 280, 2800, 8 + rand() % 4, _debBlock.models[cg_shaderLookup[shader]], 1.0f);
-	FX_AddDebris(origin, dir2, 280, 2800, 8 + rand() % 4, _debRock.models[cg_shaderLookup[shader]], 1.0f);
+	FX_AddDebris(origin, dir2, 280, 2800, 8 + rand() % 4, _debBlock.models[cg_shaderLookup[shader]], 1.0f, NULL);
+	FX_AddDebris(origin, dir2, 280, 2800, 8 + rand() % 4, _debRock.models[cg_shaderLookup[shader]], 1.0f, NULL);
 }
 
 void FX_SpawnWallDebrisBig(vec3_t origin, vec3_t dir, qhandle_t shader) {
@@ -207,6 +216,6 @@ void FX_SpawnWallDebrisBig(vec3_t origin, vec3_t dir, qhandle_t shader) {
 	dir2[1] = -dir[1];
 	dir2[2] = -dir[2];
 
-	FX_AddDebris(origin, dir2, 280, 2800, 13 + rand() % 4, _debBlock.models[cg_shaderLookup[shader]], 3.0f);
-	FX_AddDebris(origin, dir2, 280, 2800, 13 + rand() % 4, _debRock.models[cg_shaderLookup[shader]], 3.0f);
+	FX_AddDebris(origin, dir2, 280, 2800, 13 + rand() % 4, _debBlock.models[cg_shaderLookup[shader]], 3.0f, NULL);
+	FX_AddDebris(origin, dir2, 280, 2800, 13 + rand() % 4, _debRock.models[cg_shaderLookup[shader]], 3.0f, NULL);
 }

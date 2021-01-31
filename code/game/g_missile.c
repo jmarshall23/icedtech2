@@ -176,7 +176,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 		}
 	}
 	else {
-
+		gentity_t *traceEnt = &g_entities[trace->entityNum];
 		if (trace->entityNum == ENTITYNUM_WORLD) {
 			vec3_t	velocity;
 			gentity_t* tent;
@@ -188,6 +188,11 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 			VectorScale(tr_forward, 1, tent->s.origin2);
 			VectorCopy(trace->endpos, tent->s.origin);
 			tent->s.eventParm = trace->shader;
+		}
+		else if (traceEnt->takedamage && (traceEnt->client || traceEnt->s.eType == ET_MONSTER)) {
+			gentity_t* tent;
+			tent = G_TempEntity(trace->endpos, EV_BULLET_HIT_FLESH);
+			tent->s.eventParm = traceEnt->s.number;
 		}
 	}
 

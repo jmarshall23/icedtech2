@@ -26,27 +26,16 @@ void CG_InitExplosionSprite(void) {
 	}
 }
 
-///*
-//===============
-//CG_InitSmokePuffSprite
-//===============
-//*/
-//void CG_InitSmokePuffSprite(void) {
-//	qhandle_t shader;
-//	shader = engine->renderer->RegisterShader("smokePuff");
-//	cgs.media.smokePuffModel = engine->renderer->RegisterCustomModel("_smokePuffMesh", shader, &spriteVerts, 6);
-//}
-//
-///*
-//===============
-//CG_InitPlasmaSprite
-//===============
-//*/
-//void CG_InitPlasmaSprite(void) {
-//	qhandle_t shader;
-//	shader = engine->renderer->RegisterShader("sprites/plasma1");	
-//	cgs.media.plasmaBallModel =  engine->renderer->RegisterCustomModel("_plasmaSpriteMesh", shader, &spriteVerts, 6);
-//}
+/*
+===============
+CG_InitBloodPuffSprite
+===============
+*/
+void CG_InitBloodPuffSprite(void) {
+	qhandle_t shader;
+	shader = engine->renderer->RegisterShader("sprites/blood");
+	cgs.media.bloodPuffModel = engine->renderer->RegisterCustomModel("_bloodpuff", shader, &spriteVerts, 6);
+}
 
 /*
 ===============
@@ -57,6 +46,7 @@ void CG_InitSprites(void) {
 	//CG_InitPlasmaSprite();
 	//CG_InitSmokePuffSprite();
 	CG_InitExplosionSprite();
+	CG_InitBloodPuffSprite();
 }
 
 /*

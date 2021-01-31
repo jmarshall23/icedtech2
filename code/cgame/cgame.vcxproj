@@ -420,6 +420,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WIN32;NDEBUG;_WINDOWS</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="fx_beam.c" />
+    <ClCompile Include="fx_blood.c" />
     <ClCompile Include="fx_debris.c" />
     <ClCompile Include="fx_explode.c" />
     <ClCompile Include="fx_gibs.c" />

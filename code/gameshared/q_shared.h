@@ -1584,6 +1584,10 @@ typedef struct structdef_s
 // jmarshall end
 
 float VectorDistanceSquared(vec3_t v1, vec3_t v2);
+void ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj);
+
+int irand(int min, int max);
+float flrand(float min, float max);
 
 #define SQR( a ) ( ( a ) * ( a ) )
 

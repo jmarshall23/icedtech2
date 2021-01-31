@@ -790,6 +790,10 @@ void CG_AddLocalEntities( void ) {
 			CG_AddDebrisElements(le);
 			break;
 
+		case LE_BLOOD:
+			FX_RenderAddBloodElements(le);
+			break;
+
 		case LE_FRAGMENT:			// gibs and brass
 			CG_AddFragment( le );
 			break;

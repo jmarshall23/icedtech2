@@ -239,12 +239,7 @@ typedef enum {
 	LE_SCALE_FADE,
 	LE_SCOREPLUM,
 	LE_DEBRIS,
-#ifdef MISSIONPACK
-	LE_KAMIKAZE,
-	LE_INVULIMPACT,
-	LE_INVULJUICED,
-	LE_SHOWREFENTITY
-#endif
+	LE_BLOOD
 } leType_t;
 
 typedef enum {
@@ -990,6 +985,7 @@ typedef struct {
 	qhandle_t plasmaBallModel;
 	qhandle_t smokePuffModel;
 	qhandle_t explodeModel[3];
+	qhandle_t bloodPuffModel;
 // jmarshall end
 
 } cgMedia_t;
@@ -1533,6 +1529,12 @@ void CG_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t veloc
 void FX_CreateBream(int ent, vec3_t start, vec3_t end, qhandle_t m);
 void FX_RenderBeams(void);
 
+void FX_AddBlood(vec3_t origin2, vec3_t dir, int duration, int count);
+
+void FX_RenderAddBloodElements(localEntity_t* le);
+
 #define LS_FRAMETIME 100 // (ms)  cycle through lightstyle characters at 10fps
+
+
 
 extern cgameImport_t* engine;

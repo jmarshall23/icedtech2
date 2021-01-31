@@ -1979,5 +1979,7 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 	//} else {
 	////	CG_MissileHitWall( WP_MACHINEGUN, 0, end, normal, IMPACTSOUND_DEFAULT );
 	//}
-
+	if (flesh && fleshEntityNum != 0) {
+		FX_AddBlood(end, normal, 1200, 12);
+	}
 }

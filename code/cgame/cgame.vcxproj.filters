@@ -77,6 +77,9 @@
     <ClCompile Include="cg_monster.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fx_blood.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game\bg_public.h">

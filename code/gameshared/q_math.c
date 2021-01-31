@@ -1312,3 +1312,38 @@ float VectorDistanceSquared(vec3_t v1, vec3_t v2) {
 	VectorSubtract(v2, v1, dir);
 	return VectorLengthSquared(dir);
 }
+
+/*
+================
+ProjectPointOntoVector
+================
+*/
+void ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj) {
+	vec3_t pVec, vec;
+
+	VectorSubtract(point, vStart, pVec);
+	VectorSubtract(vEnd, vStart, vec);
+	VectorNormalize(vec);
+	// project onto the directional vector for this segment
+	VectorMA(vStart, DotProduct(pVec, vec), vec, vProj);
+}
+
+#define QRAND_MAX 32768
+static unsigned int	holdrand = 0x89abcdef; // 64 bit support for iojamp
+
+float flrand(float min, float max)
+{
+	float	result;
+
+	holdrand = (holdrand * 214013L) + 2531011L;
+	result = (float)(holdrand >> 17);						// 0 - 32767 range
+	result = ((result * (max - min)) / (float)QRAND_MAX) + min;
+
+	return(result);
+}
+
+int irand(int min, int max)
+{
+	holdrand = 214013 * holdrand + 2531011;
+	return min + ((signed int)(((unsigned int)holdrand >> 17) * (max - min + 1)) >> 15);
+}

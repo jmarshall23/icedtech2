@@ -182,7 +182,7 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage ) {
 		SnapVectorTowards( tr.endpos, muzzle );
 
 		// send bullet impact
-		if ( traceEnt->takedamage && traceEnt->client ) {
+		if ( traceEnt->takedamage && (traceEnt->client || traceEnt->s.eType == ET_MONSTER) ) {
 			tent = G_TempEntity( tr.endpos, EV_BULLET_HIT_FLESH );
 			tent->s.eventParm = traceEnt->s.number;
 			if( LogAccuracyHit( traceEnt, ent ) ) {
@@ -269,7 +269,17 @@ qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 		engine->SV_Trace (&tr, tr_start, NULL, NULL, tr_end, passent, MASK_SHOT);
 		traceEnt = &g_entities[ tr.entityNum ];
 		
-		if ( traceEnt->takedamage) {
+		if (traceEnt->takedamage && (traceEnt->client || traceEnt->s.eType == ET_MONSTER)) {
+			gentity_t* tent;
+			tent = G_TempEntity(tr.endpos, EV_BULLET_HIT_FLESH);
+			tent->s.eventParm = traceEnt->s.number;
+			damage = DEFAULT_SHOTGUN_DAMAGE;
+			G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_SHOTGUN);
+			if (LogAccuracyHit(traceEnt, ent)) {
+				return qtrue;
+			}
+		}
+		else if ( traceEnt->takedamage) {
 			damage = DEFAULT_SHOTGUN_DAMAGE;
 			G_Damage( traceEnt, ent, ent, forward, tr.endpos,	damage, 0, MOD_SHOTGUN);
 				if( LogAccuracyHit( traceEnt, ent ) ) {

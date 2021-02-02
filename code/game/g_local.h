@@ -205,6 +205,8 @@ struct gentity_s {
 
 	qboolean	inuse;
 
+	char		*scriptname;
+
 	char		*classname;			// set in QuakeEd
 	int			spawnflags;			// set in QuakeEd
 
@@ -642,6 +644,8 @@ typedef struct {
 	int			current_skill;
 
 	int			total_monsters;	
+
+	char		script_initial_spawn[512];
 } level_locals_t;
 
 #define MELEE_DISTANCE	80
@@ -827,6 +831,11 @@ char	*vtos( const vec3_t v );
 
 float vectoyaw( const vec3_t vec );
 
+void SetEntityHealth(gentity_t* self, int health);
+void SetPlayerArmor(gentity_t* self, int armor);
+
+gentity_t* SpawnEntityByClass(const char* name, vec3_t origin, float yaw);
+
 void G_AddPredictableEvent( gentity_t *ent, int event, int eventParm );
 void G_AddEvent( gentity_t *ent, int event, int eventParm );
 void G_SetOrigin( gentity_t *ent, vec3_t origin );
@@ -835,6 +844,7 @@ void AddRemap(const char *oldShader, const char *newShader, float timeOffset);
 const char *BuildShaderStateConfig();
 
 void G_CallScriptForEntity(const char* name, gentity_t* self);
+qboolean G_MapHasInitialSpawnScript(void);
 
 //
 // g_combat.c

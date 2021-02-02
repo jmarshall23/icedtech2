@@ -290,5 +290,6 @@ void ogre_bdie9(gentity_t *self);
 void ogre_bdie10(gentity_t *self);
 void ogre_die(gentity_t *self);
 void ogre_melee(gentity_t *self);
+void monster_orge_preache(gentity_t *self);
 void monster_ogre(gentity_t *self);
 void monster_ogre_marksman(gentity_t *self);

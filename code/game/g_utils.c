@@ -36,6 +36,48 @@ typedef struct {
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
+gentity_t* SpawnEntityByClass(const char* name, vec3_t origin, float yaw) {
+	gentity_t* ent = G_Spawn();
+
+	ent->classname = name;
+	VectorSet(ent->s.origin, origin[0], origin[1], origin[2]);
+	VectorSet(ent->s.angles, 0, yaw, 0);
+
+	// move editor origin to pos
+	VectorCopy(ent->s.origin, ent->s.pos.trBase);
+	VectorCopy(ent->s.origin, ent->r.currentOrigin);
+
+	// if we didn't get a classname, don't bother spawning anything
+	if (!G_CallSpawn(ent)) {
+		G_Error("SpawnEntityByClass: G_CallSpawn failed...\n");
+		G_FreeEntity(ent);
+	}
+
+	return ent;
+}
+
+qboolean G_MapHasInitialSpawnScript(void) {
+	return strlen(level.script_initial_spawn) > 0;
+}
+
+void SetPlayerArmor(gentity_t* self, int armor) {
+	if (self->client == NULL) {
+		G_Error("SetPlayerArmor: self isn't a player\n");
+		return;
+	}
+
+	self->client->ps.stats[STAT_ARMOR] = armor;
+}
+
+void SetEntityHealth(gentity_t* self, int health) {
+	self->health = health;
+	
+	if (self->client != NULL)
+	{
+		self->client->ps.stats[STAT_HEALTH] = health;
+	}
+}
+
 void G_CallScriptForEntity(const char *name, gentity_t* self) {
 	unsigned int hash = MurmurOAAT32(name);
 
@@ -49,6 +91,7 @@ void G_CallScriptForEntity(const char *name, gentity_t* self) {
 			if (superScriptTable[i].func1 != NULL)
 			{
 				superScriptTable[i].func1(self);
+				return;
 			}
 			else
 			{

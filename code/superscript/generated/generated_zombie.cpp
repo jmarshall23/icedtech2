@@ -3,13 +3,15 @@
 // This auto generated file is released under the GPL license, please see code_license.txt
 // 
 
+#define GENERATED_SUPERSCRIPT 1
 #include "../../game/g_local.h "
 #include "../superscript.h"
 extern "C" {
 	#include "generated_zombie.h"
 
+#include "save_func.h"
 };
-float inpain = 0;
+static float inpain = 0;
 
 void zombie_stand1(gentity_t *self) {
 	static mframe_t frame = { ai_stand,0, NULL };
@@ -1206,9 +1208,7 @@ void zombie_pain(gentity_t *self) {
 	else
 		zombie_paind1(self);
 }
-void monster_zombie(gentity_t *self) {
-
-	 int	SPAWN_CRUCIFIED	= 1;
+void monster_zombie_precache(gentity_t *self) {
 
 	precache_model ("models/monsters/zombie.md3");
 	precache_model ("progs/h_zombie.mdl");
@@ -1224,6 +1224,12 @@ void monster_zombie(gentity_t *self) {
 	precache_sound ("zombie/z_miss.wav");
 	precache_sound ("zombie/z_hit.wav");
 	precache_sound ("zombie/idle_w2.wav");
+}
+void monster_zombie(gentity_t *self) {
+
+	 int	SPAWN_CRUCIFIED	= 1;
+
+	monster_zombie_precache(self);
 
 		self->r.contents = CONTENTS_SOLID;
 	engine->SV_LinkEntity(self);

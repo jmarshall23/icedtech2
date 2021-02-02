@@ -223,4 +223,5 @@ void army_cdie9(gentity_t *self);
 void army_cdie10(gentity_t *self);
 void army_cdie11(gentity_t *self);
 void army_die(gentity_t *self);
+void monster_army_precache(gentity_t *self);
 void monster_army(gentity_t *self);

@@ -3,11 +3,13 @@
 // This auto generated file is released under the GPL license, please see code_license.txt
 // 
 
+#define GENERATED_SUPERSCRIPT 1
 #include "../../game/g_local.h "
 #include "../superscript.h"
 extern "C" {
 	#include "generated_soldier.h"
 
+#include "save_func.h"
 };
 
 void army_stand1(gentity_t *self) {
@@ -653,8 +655,8 @@ void army_die(gentity_t *self) {
 	else
 		army_cdie1(self);
 }
-void monster_army(gentity_t *self) {
-	
+void monster_army_precache(gentity_t *self) {
+
 	precache_model ("models/monsters/soldier.md3");
 	precache_model ("progs/h_guard.mdl");
 	precache_model ("progs/gib1.mdl");
@@ -669,7 +671,10 @@ void monster_army(gentity_t *self) {
 	precache_sound ("soldier/sight1.wav");
 
 	precache_sound ("player/udeath.wav");		
-
+}
+void monster_army(gentity_t *self) {
+	
+	monster_army_precache(self);
 
 		self->r.contents = CONTENTS_SOLID;
 	engine->SV_LinkEntity(self);

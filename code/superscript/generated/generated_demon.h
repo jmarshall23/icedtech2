@@ -144,6 +144,7 @@ void demon1_die8(gentity_t *self);
 void demon1_die9(gentity_t *self);
 void demon_die(gentity_t *self);
 void Demon_MeleeAttack(gentity_t *self);
+void monster_dog_precache(gentity_t *self);
 void monster_demon1(gentity_t *self);
 float CheckDemonMelee(gentity_t *self);
 float CheckDemonJump(gentity_t *self);

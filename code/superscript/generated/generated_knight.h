@@ -200,4 +200,5 @@ void knight_dieb10(gentity_t *self);
 void knight_dieb11(gentity_t *self);
 void knight_die(gentity_t *self);
 void knight_attack(gentity_t *self);
+void monster_knight_precache(gentity_t *self);
 void monster_knight(gentity_t *self);

@@ -461,6 +461,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;GLOBALRANK</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WIN32;NDEBUG;_WINDOWS;GLOBALRANK</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="g_worldspawn.c" />
     <ClCompile Include="m_move.c" />
     <ClCompile Include="p_trail.c" />
   </ItemGroup>

@@ -397,14 +397,8 @@ void(entity attacker, float take) zombie_pain =
 
 //============================================================================
 
-/*QUAKED monster_zombie (1 0 0) (-16 -16 -24) (16 16 32) Crucified ambush
-
-If crucified, stick the bounding box 12 pixels back into a wall to look right.
-*/
-void() monster_zombie =
+void() monster_zombie_precache
 {
-	local int	SPAWN_CRUCIFIED	= 1;
-
 	precache_model ("models/monsters/zombie.md3");
 	precache_model ("progs/h_zombie.mdl");
 	precache_model ("progs/zom_gib.mdl");
@@ -419,6 +413,17 @@ void() monster_zombie =
 	precache_sound ("zombie/z_miss.wav");
 	precache_sound ("zombie/z_hit.wav");
 	precache_sound ("zombie/idle_w2.wav");
+};
+
+/*QUAKED monster_zombie (1 0 0) (-16 -16 -24) (16 16 32) Crucified ambush
+
+If crucified, stick the bounding box 12 pixels back into a wall to look right.
+*/
+void() monster_zombie =
+{
+	local int	SPAWN_CRUCIFIED	= 1;
+
+	monster_zombie_precache();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

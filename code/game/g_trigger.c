@@ -57,15 +57,22 @@ void multi_trigger( gentity_t *ent, gentity_t *activator ) {
 		return;		// can't retrigger until the wait is over
 	}
 
-	if (ent->message) {
-		G_CenterPrint(activator - g_entities, ent->message);		
+	if (ent->scriptname)
+	{
+		G_CallScriptForEntity(ent->scriptname, ent);
 	}
+	else
+	{
+		if (ent->message) {
+			G_CenterPrint(activator - g_entities, ent->message);
+		}
 
-	if (ent->noise1 > 0) {
-		G_PlaySound(activator, ent->noise1);
-	}
+		if (ent->noise1 > 0) {
+			G_PlaySound(activator, ent->noise1);
+		}
 
-	G_UseTargets (ent, ent->activator);
+		G_UseTargets(ent, ent->activator);
+	}	
 
 	if ( ent->wait > 0 ) {
 		ent->think = multi_wait;

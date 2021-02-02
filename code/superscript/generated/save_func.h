@@ -82,6 +82,7 @@ void demon1_die8(gentity_t *self);
 void demon1_die9(gentity_t *self);
 void demon_die(gentity_t *self);
 void Demon_MeleeAttack(gentity_t *self);
+void monster_dog_precache(gentity_t *self);
 void monster_demon1(gentity_t *self);
 float CheckDemonMelee(gentity_t *self);
 float CheckDemonJump(gentity_t *self);
@@ -181,6 +182,7 @@ void dog_die(gentity_t *self);
 float CheckDogMelee(gentity_t *self);
 float CheckDogJump(gentity_t *self);
 float DogCheckAttack(gentity_t *self);
+void monster_dog_preache(gentity_t *self);
 void monster_dog(gentity_t *self);
 void knight_stand1(gentity_t *self);
 void knight_stand2(gentity_t *self);
@@ -282,7 +284,12 @@ void knight_dieb10(gentity_t *self);
 void knight_dieb11(gentity_t *self);
 void knight_die(gentity_t *self);
 void knight_attack(gentity_t *self);
+void monster_knight_precache(gentity_t *self);
 void monster_knight(gentity_t *self);
+void map_zoo_initial_spawn(gentity_t *self);
+void map_zoo_worldspawn(gentity_t *self);
+void map_zoo_text_example(gentity_t *self);
+void map_zoo_spawn_army_test(gentity_t *self);
 void ogre_stand1(gentity_t *self);
 void ogre_stand2(gentity_t *self);
 void ogre_stand3(gentity_t *self);
@@ -423,6 +430,7 @@ void ogre_bdie9(gentity_t *self);
 void ogre_bdie10(gentity_t *self);
 void ogre_die(gentity_t *self);
 void ogre_melee(gentity_t *self);
+void monster_orge_preache(gentity_t *self);
 void monster_ogre(gentity_t *self);
 void monster_ogre_marksman(gentity_t *self);
 void army_stand1(gentity_t *self);
@@ -531,6 +539,7 @@ void army_cdie9(gentity_t *self);
 void army_cdie10(gentity_t *self);
 void army_cdie11(gentity_t *self);
 void army_die(gentity_t *self);
+void monster_army_precache(gentity_t *self);
 void monster_army(gentity_t *self);
 void zombie_stand1(gentity_t *self);
 void zombie_stand2(gentity_t *self);
@@ -733,8 +742,10 @@ void zombie_paine29(gentity_t *self);
 void zombie_paine30(gentity_t *self);
 void zombie_die(gentity_t *self);
 void zombie_pain(gentity_t *self);
+void monster_zombie_precache(gentity_t *self);
 void monster_zombie(gentity_t *self);
-#define NUM_SUPERSCRIPT_FUNCS 724
+#ifndef GENERATED_SUPERSCRIPT
+#define NUM_SUPERSCRIPT_FUNCS 734
 static funcTable_t superScriptTable[] = {
 	{ "demon1_stand1",1057125831,demon1_stand1, NULL, NULL },
 	{ "demon1_stand2",730601500,demon1_stand2, NULL, NULL },
@@ -808,6 +819,7 @@ static funcTable_t superScriptTable[] = {
 	{ "demon1_die9",371497554,demon1_die9, NULL, NULL },
 	{ "demon_die",260655248,demon_die, NULL, NULL },
 	{ "Demon_MeleeAttack",615522435,Demon_MeleeAttack, NULL, NULL },
+	{ "monster_dog_precache",3370043791,monster_dog_precache, NULL, NULL },
 	{ "monster_demon1",3723126925,monster_demon1, NULL, NULL },
 	{ "CheckDemonMelee",428733189, NULL, NULL,CheckDemonMelee },
 	{ "CheckDemonJump",3771197204, NULL, NULL,CheckDemonJump },
@@ -907,6 +919,7 @@ static funcTable_t superScriptTable[] = {
 	{ "CheckDogMelee",1185876752, NULL, NULL,CheckDogMelee },
 	{ "CheckDogJump",2838054552, NULL, NULL,CheckDogJump },
 	{ "DogCheckAttack",921149686, NULL, NULL,DogCheckAttack },
+	{ "monster_dog_preache",215371437,monster_dog_preache, NULL, NULL },
 	{ "monster_dog",3691571419,monster_dog, NULL, NULL },
 	{ "knight_stand1",3976972825,knight_stand1, NULL, NULL },
 	{ "knight_stand2",1222338581,knight_stand2, NULL, NULL },
@@ -1008,7 +1021,12 @@ static funcTable_t superScriptTable[] = {
 	{ "knight_dieb11",702541141,knight_dieb11, NULL, NULL },
 	{ "knight_die",478997247,knight_die, NULL, NULL },
 	{ "knight_attack",831087779,knight_attack, NULL, NULL },
+	{ "monster_knight_precache",2693092948,monster_knight_precache, NULL, NULL },
 	{ "monster_knight",2133246671,monster_knight, NULL, NULL },
+	{ "map_zoo_initial_spawn",896346962,map_zoo_initial_spawn, NULL, NULL },
+	{ "map_zoo_worldspawn",3674343641,map_zoo_worldspawn, NULL, NULL },
+	{ "map_zoo_text_example",2724933251,map_zoo_text_example, NULL, NULL },
+	{ "map_zoo_spawn_army_test",1002492156,map_zoo_spawn_army_test, NULL, NULL },
 	{ "ogre_stand1",1707533320,ogre_stand1, NULL, NULL },
 	{ "ogre_stand2",2033917492,ogre_stand2, NULL, NULL },
 	{ "ogre_stand3",493500538,ogre_stand3, NULL, NULL },
@@ -1149,6 +1167,7 @@ static funcTable_t superScriptTable[] = {
 	{ "ogre_bdie10",651059395,ogre_bdie10, NULL, NULL },
 	{ "ogre_die",2908515552,ogre_die, NULL, NULL },
 	{ "ogre_melee",92820982,ogre_melee, NULL, NULL },
+	{ "monster_orge_preache",3596437376,monster_orge_preache, NULL, NULL },
 	{ "monster_ogre",734370045,monster_ogre, NULL, NULL },
 	{ "monster_ogre_marksman",3312553481,monster_ogre_marksman, NULL, NULL },
 	{ "army_stand1",4277363099,army_stand1, NULL, NULL },
@@ -1257,6 +1276,7 @@ static funcTable_t superScriptTable[] = {
 	{ "army_cdie10",2204614095,army_cdie10, NULL, NULL },
 	{ "army_cdie11",3745061606,army_cdie11, NULL, NULL },
 	{ "army_die",1810957996,army_die, NULL, NULL },
+	{ "monster_army_precache",547522665,monster_army_precache, NULL, NULL },
 	{ "monster_army",228947035,monster_army, NULL, NULL },
 	{ "zombie_stand1",3261750622,zombie_stand1, NULL, NULL },
 	{ "zombie_stand2",507379557,zombie_stand2, NULL, NULL },
@@ -1459,5 +1479,7 @@ static funcTable_t superScriptTable[] = {
 	{ "zombie_paine30",2144273300,zombie_paine30, NULL, NULL },
 	{ "zombie_die",3836488374,zombie_die, NULL, NULL },
 	{ "zombie_pain",3050655406,zombie_pain, NULL, NULL },
+	{ "monster_zombie_precache",1427006662,monster_zombie_precache, NULL, NULL },
 	{ "monster_zombie",1840895396,monster_zombie, NULL, NULL },
 };
+#endif

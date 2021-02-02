@@ -3,11 +3,13 @@
 // This auto generated file is released under the GPL license, please see code_license.txt
 // 
 
+#define GENERATED_SUPERSCRIPT 1
 #include "../../game/g_local.h "
 #include "../superscript.h"
 extern "C" {
 	#include "generated_knight.h"
 
+#include "save_func.h"
 };
 
 void knight_stand1(gentity_t *self) {
@@ -621,7 +623,7 @@ void knight_attack(gentity_t *self) {
 	else
 		knight_runatk1(self);
 }
-void monster_knight(gentity_t *self) {
+void monster_knight_precache(gentity_t *self) {
 
 	precache_model ("models/monsters/knight.md3");
 	precache_model ("progs/h_knight.mdl");
@@ -632,6 +634,10 @@ void monster_knight(gentity_t *self) {
 	precache_sound ("knight/sword1.wav");
 	precache_sound ("knight/sword2.wav");
 	precache_sound ("knight/idle.wav");
+}
+void monster_knight(gentity_t *self) {
+
+	monster_knight_precache(self);
 
 		self->r.contents = CONTENTS_SOLID;
 	engine->SV_LinkEntity(self);

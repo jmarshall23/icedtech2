@@ -182,4 +182,5 @@ void dog_die(gentity_t *self);
 float CheckDogMelee(gentity_t *self);
 float CheckDogJump(gentity_t *self);
 float DogCheckAttack(gentity_t *self);
+void monster_dog_preache(gentity_t *self);
 void monster_dog(gentity_t *self);

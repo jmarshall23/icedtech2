@@ -7,6 +7,14 @@
 #define ATTN_NORM 1
 #define ATTN_STATIC 2
 
+#define null nullptr
+#define CenterPrint(y, x) G_CenterPrint(y - g_entities, x)
+
+#define FreeEntity G_FreeEntity
+#define Print G_Printf
+
+#define FindEntity(x) G_Find(NULL, FOFS(targetname), x)
+
 static idVec3_t	VEC_HULL2_MIN = idVec3_t(-32, -32, -24);
 static idVec3_t	VEC_HULL2_MAX = idVec3_t(32, 32, 64);
 

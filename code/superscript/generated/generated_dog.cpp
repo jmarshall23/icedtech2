@@ -3,11 +3,13 @@
 // This auto generated file is released under the GPL license, please see code_license.txt
 // 
 
+#define GENERATED_SUPERSCRIPT 1
 #include "../../game/g_local.h "
 #include "../superscript.h"
 extern "C" {
 	#include "generated_dog.h"
 
+#include "save_func.h"
 };
 
 void dog_bite(gentity_t *self) {
@@ -660,7 +662,7 @@ float DogCheckAttack(gentity_t *self) {
 	
 	return FALSE;
 }
-void monster_dog(gentity_t *self) {
+void monster_dog_preache(gentity_t *self) {
 
 	precache_model ("progs/h_dog.mdl");
 	precache_model ("models/monsters/dog.md3");
@@ -670,6 +672,10 @@ void monster_dog(gentity_t *self) {
 	precache_sound ("dog/dpain1.wav");
 	precache_sound ("dog/dsight.wav");
 	precache_sound ("dog/idle.wav");
+}
+void monster_dog(gentity_t *self) {
+
+	monster_dog_preache(self);
 
 		self->r.contents = CONTENTS_SOLID;
 	engine->SV_LinkEntity(self);

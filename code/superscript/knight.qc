@@ -255,9 +255,7 @@ void() knight_attack =
 		knight_runatk1 ();
 };
 
-/*QUAKED monster_knight (1 0 0) (-16 -16 -24) (16 16 40) Ambush
-*/
-void() monster_knight =
+void() monster_knight_precache
 {
 	precache_model ("models/monsters/knight.md3");
 	precache_model ("progs/h_knight.mdl");
@@ -268,6 +266,13 @@ void() monster_knight =
 	precache_sound ("knight/sword1.wav");
 	precache_sound ("knight/sword2.wav");
 	precache_sound ("knight/idle.wav");
+};
+
+/*QUAKED monster_knight (1 0 0) (-16 -16 -24) (16 16 40) Ambush
+*/
+void() monster_knight =
+{
+	monster_knight_precache();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

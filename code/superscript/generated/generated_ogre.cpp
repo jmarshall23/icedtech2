@@ -3,11 +3,13 @@
 // This auto generated file is released under the GPL license, please see code_license.txt
 // 
 
+#define GENERATED_SUPERSCRIPT 1
 #include "../../game/g_local.h "
 #include "../superscript.h"
 extern "C" {
 	#include "generated_ogre.h"
 
+#include "save_func.h"
 };
 
 void ogre_stand1(gentity_t *self) {
@@ -877,7 +879,7 @@ void ogre_melee(gentity_t *self) {
 	else
 		ogre_swing1(self);
 }
-void monster_ogre(gentity_t *self) {
+void monster_orge_preache(gentity_t *self) {
 
 	precache_model ("models/monsters/ogre.md3");
 	precache_model ("progs/h_ogre.mdl");
@@ -890,6 +892,10 @@ void monster_ogre(gentity_t *self) {
 	precache_sound ("ogre/ogpain1.wav");
 	precache_sound ("ogre/ogsawatk.wav");
 	precache_sound ("ogre/ogwake.wav");
+}
+void monster_ogre(gentity_t *self) {
+
+	monster_orge_preache(self);
 
 		self->r.contents = CONTENTS_SOLID;
 	engine->SV_LinkEntity(self);

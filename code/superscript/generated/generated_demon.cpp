@@ -3,11 +3,13 @@
 // This auto generated file is released under the GPL license, please see code_license.txt
 // 
 
+#define GENERATED_SUPERSCRIPT 1
 #include "../../game/g_local.h "
 #include "../superscript.h"
 extern "C" {
 	#include "generated_demon.h"
 
+#include "save_func.h"
 };
 
 void demon1_stand1(gentity_t *self) {
@@ -452,7 +454,7 @@ void Demon_MeleeAttack(gentity_t *self) {
 
 	demon1_atta1(self);
 }
-void monster_demon1(gentity_t *self) {
+void monster_dog_precache(gentity_t *self) {
 
 	precache_model ("models/monsters/demon.md3");
 	precache_model ("progs/h_demon.mdl");
@@ -463,6 +465,10 @@ void monster_demon1(gentity_t *self) {
 	precache_sound ("demon/dpain1.wav");
 	precache_sound ("demon/idle1.wav");
 	precache_sound ("demon/sight2.wav");
+}
+void monster_demon1(gentity_t *self) {
+
+	monster_dog_precache(self);
 
 		self->r.contents = CONTENTS_SOLID;
 	engine->SV_LinkEntity(self);

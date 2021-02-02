@@ -14,6 +14,7 @@
     <None Include="demon.qc" />
     <None Include="dog.qc" />
     <None Include="knight.qc" />
+    <None Include="map_zoo.qc" />
     <None Include="ogre.qc" />
     <None Include="soldier.qc" />
     <None Include="zombie.qc" />
@@ -22,6 +23,7 @@
     <ClCompile Include="generated\generated_demon.cpp" />
     <ClCompile Include="generated\generated_dog.cpp" />
     <ClCompile Include="generated\generated_knight.cpp" />
+    <ClCompile Include="generated\generated_map_zoo.cpp" />
     <ClCompile Include="generated\generated_ogre.cpp" />
     <ClCompile Include="generated\generated_soldier.cpp" />
     <ClCompile Include="generated\generated_zombie.cpp" />
@@ -31,6 +33,7 @@
     <ClInclude Include="generated\generated_demon.h" />
     <ClInclude Include="generated\generated_dog.h" />
     <ClInclude Include="generated\generated_knight.h" />
+    <ClInclude Include="generated\generated_map_zoo.h" />
     <ClInclude Include="generated\generated_ogre.h" />
     <ClInclude Include="generated\generated_soldier.h" />
     <ClInclude Include="generated\generated_zombie.h" />

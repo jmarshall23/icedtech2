@@ -1230,6 +1230,11 @@ void ClientSpawn(gentity_t *ent) {
 	client->ps.torsoAnim = TORSO_STAND;
 	client->ps.legsAnim = LEGS_IDLE;
 
+	// If we have a initial spawn script, run it.
+	if (G_MapHasInitialSpawnScript()) {
+		G_CallScriptForEntity(level.script_initial_spawn, ent);
+	}
+
 	if ( level.intermissiontime ) {
 		MoveClientToIntermission( ent );
 	} else {

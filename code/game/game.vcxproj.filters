@@ -99,6 +99,9 @@
     <ClCompile Include="g_train.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="g_worldspawn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="g_local.h">

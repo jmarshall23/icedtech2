@@ -248,11 +248,8 @@ void() army_die =
 		army_cdie1 ();
 };
 
-
-/*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush
-*/
-void() monster_army =
-{	
+void() monster_army_precache
+{
 	precache_model ("models/monsters/soldier.md3");
 	precache_model ("progs/h_guard.mdl");
 	precache_model ("progs/gib1.mdl");
@@ -267,7 +264,13 @@ void() monster_army =
 	precache_sound ("soldier/sight1.wav");
 
 	precache_sound ("player/udeath.wav");		// gib death
+};
 
+/*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush
+*/
+void() monster_army =
+{	
+	monster_army_precache();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

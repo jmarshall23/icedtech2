@@ -88,6 +88,15 @@ namespace QuakeToC
                 body = body.Replace(f.name + " ()", f.name + "(self)");
             }
 
+            foreach (QCfile.Variable v in qc.globalVariables)
+            {
+                string var_type = v.type;
+                if (var_type == "entity")
+                {
+                    body = body.Replace(v.name + ".", v.name + "->");
+                }             
+            }
+
             body = body.Replace("walkmove(", "walkmove(self, ");
             body = body.Replace("walkmove (", "walkmove(self, ");            
 
@@ -111,15 +120,24 @@ namespace QuakeToC
 
             string header = Path.GetFileNameWithoutExtension(filename) + ".h";
 
-            text += "#include \"../../game/g_local.h \"\n";
+            text += "#define GENERATED_SUPERSCRIPT 1\n";
+
+            text += "#include \"../../game/g_local.h \"\n";            
             text += "#include \"../superscript.h\"\n";
             text += "extern \"C\" {\n";
             text += "\t#include \"" + header + "\"\n\n";
+            text += "#include \"save_func.h\"\n";
             text += "};\n";
 
             foreach (QCfile.Variable v in qc.globalVariables)
             {
-                text += v.type + " " + v.name + " = 0;\n";
+                string var_type = v.type;
+                if (var_type == "entity")
+                {
+                    var_type = "gentity_t *";
+                }
+                
+                text += "static " + var_type + " " + v.name + " = 0;\n";
             }
 
             text += "\n";
@@ -268,10 +286,12 @@ namespace QuakeToC
 
             if (newFilesUpdated > 0)
             {
+                LookupTableTextBody += "#ifndef GENERATED_SUPERSCRIPT\n";
                 LookupTableTextBody += "#define NUM_SUPERSCRIPT_FUNCS " + LookupNumFuncs + "\n";
                 LookupTableTextBody += "static funcTable_t superScriptTable[] = {\n";
                 LookupTableTextBody += LookupTableText;
                 LookupTableTextBody += "};\n";
+                LookupTableTextBody += "#endif\n";
                 File.WriteAllText("../superscript/generated/save_func.h", LookupTableTextBody);
 
                 string anim_public_header = GetFileHeader();

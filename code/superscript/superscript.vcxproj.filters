@@ -29,6 +29,9 @@
     <None Include="demon.qc">
       <Filter>Scripts</Filter>
     </None>
+    <None Include="map_zoo.qc">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="generated\generated_dog.cpp">
@@ -47,6 +50,9 @@
       <Filter>Generated</Filter>
     </ClCompile>
     <ClCompile Include="generated\generated_demon.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="generated\generated_map_zoo.cpp">
       <Filter>Generated</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,6 +82,9 @@
       <Filter>Generated</Filter>
     </ClInclude>
     <ClInclude Include="generated\anim_public.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\generated_map_zoo.h">
       <Filter>Generated</Filter>
     </ClInclude>
   </ItemGroup>

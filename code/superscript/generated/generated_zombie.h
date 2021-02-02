@@ -402,4 +402,5 @@ void zombie_paine29(gentity_t *self);
 void zombie_paine30(gentity_t *self);
 void zombie_die(gentity_t *self);
 void zombie_pain(gentity_t *self);
+void monster_zombie_precache(gentity_t *self);
 void monster_zombie(gentity_t *self);

@@ -834,6 +834,8 @@ void G_SetAngle(gentity_t* ent, vec3_t angle);
 void AddRemap(const char *oldShader, const char *newShader, float timeOffset);
 const char *BuildShaderStateConfig();
 
+void G_CallScriptForEntity(const char* name, gentity_t* self);
+
 //
 // g_combat.c
 //

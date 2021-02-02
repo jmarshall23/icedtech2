@@ -1347,3 +1347,14 @@ int irand(int min, int max)
 	holdrand = 214013 * holdrand + 2531011;
 	return min + ((signed int)(((unsigned int)holdrand >> 17) * (max - min + 1)) >> 15);
 }
+
+unsigned int MurmurOAAT32(const char* key)
+{
+	unsigned int h = 3323198485;
+	for (; *key; ++key) {
+		h ^= *key;
+		h *= 0x5bd1e995;
+		h ^= h >> 15;
+	}
+	return h;
+}

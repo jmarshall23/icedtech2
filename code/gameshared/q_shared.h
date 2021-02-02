@@ -1589,6 +1589,8 @@ void ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vPr
 int irand(int min, int max);
 float flrand(float min, float max);
 
+unsigned int MurmurOAAT32(const char* key);
+
 #define SQR( a ) ( ( a ) * ( a ) )
 
 

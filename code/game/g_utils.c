@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // g_utils.c -- misc utility functions for game module
 
 #include "g_local.h"
+#include "../superscript/generated/save_func.h"
 
 typedef struct {
   char oldShader[MAX_QPATH];
@@ -34,6 +35,30 @@ typedef struct {
 
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
+
+void G_CallScriptForEntity(const char *name, gentity_t* self) {
+	unsigned int hash = MurmurOAAT32(name);
+
+	if (self == NULL) {
+		G_Error("G_CallScriptForEntity: Entity == NULL\n");
+	}
+
+	for (int i = 0; i < NUM_SUPERSCRIPT_FUNCS; i++) {
+		if (superScriptTable[i].hash == hash)
+		{
+			if (superScriptTable[i].func1 != NULL)
+			{
+				superScriptTable[i].func1(self);
+			}
+			else
+			{
+				G_Error("G_CallSCriptForEntity: Script function must take gentity_t with void return type\n");
+			}
+		}
+	}
+
+	G_Printf("G_CallScriptForEntity: Script Function %s is missing\n", name);
+}
 
 void AddRemap(const char *oldShader, const char *newShader, float timeOffset) {
 	int i;

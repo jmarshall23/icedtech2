@@ -1532,6 +1532,7 @@ void FX_CreateBream(int ent, vec3_t start, vec3_t end, qhandle_t m);
 void FX_RenderBeams(void);
 
 void FX_AddBlood(vec3_t origin2, vec3_t dir, int duration, int count);
+void FX_SpawnSingleGib(vec3_t origin2, float size, int duration);
 
 void FX_RenderAddBloodElements(localEntity_t* le);
 

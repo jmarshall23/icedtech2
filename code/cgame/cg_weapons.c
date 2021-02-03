@@ -1980,6 +1980,10 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 	////	CG_MissileHitWall( WP_MACHINEGUN, 0, end, normal, IMPACTSOUND_DEFAULT );
 	//}
 	if (flesh && fleshEntityNum != 0) {
-		FX_AddBlood(end, normal, 1200, 12);
+		vec3_t perpVector;
+		VectorSet(perpVector, normal[1], -normal[0], normal[2]);
+		//FX_AddBlood(end, perpVector, 1200, 6);
+		FX_AddBlood(end, normal, 1200, irand(7, 12));		
+		FX_SpawnSingleGib(end, flrand(0.25, 0.5), irand(1000, 3000));
 	}
 }

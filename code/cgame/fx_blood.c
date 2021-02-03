@@ -18,7 +18,8 @@ void FX_RenderAddBloodElements(localEntity_t* le) {
 	AnglesToAxis(cg.refdefViewAngles, ent->axis);
 
 	ent->hModel = cgs.media.bloodPuffModel;
-	ent->scale = 5.0f;
+	ent->scale = flrand(3.0f, 7.0f);
+	ent->skipShadows = qtrue;
 
 	vec3_t newOrigin;
 	trace_t trace;
@@ -147,7 +148,7 @@ void FX_AddBlood(vec3_t origin2, vec3_t dir, int duration, int count) {
 		VectorCopy(origin, re->origin);
 		AxisCopy(axisDefault, re->axis);
 
-		le->pos.trType = TR_GRAVITY_LOW;
+		le->pos.trType = TR_GRAVITY;
 		VectorCopy(origin, le->pos.trBase);
 		VectorCopy(velocity, le->pos.trDelta);
 		le->pos.trTime = cg.time;

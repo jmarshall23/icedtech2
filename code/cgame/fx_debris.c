@@ -192,8 +192,8 @@ void FX_SpawnWallDebris(vec3_t origin, vec3_t dir, qhandle_t shader) {
 	dir2[1] = -dir[1];
 	dir2[2] = -dir[2];
 
-	FX_AddDebris(origin, dir2, 280, 2800, 8 + rand() % 4, _debBlock.models[cg_shaderLookup[shader]], 1.0f, NULL);
-	FX_AddDebris(origin, dir2, 280, 2800, 8 + rand() % 4, _debRock.models[cg_shaderLookup[shader]], 1.0f, NULL);
+	FX_AddDebris(origin, dir2, irand(250, 320), 2800, irand(8, 12), _debBlock.models[cg_shaderLookup[shader]], flrand(0.5, 1.0f), NULL);
+	FX_AddDebris(origin, dir2, irand(250, 320), 2800, irand(8, 12), _debRock.models[cg_shaderLookup[shader]], flrand(0.5, 1.0f), NULL);
 }
 
 void FX_SpawnWallDebrisBig(vec3_t origin, vec3_t dir, qhandle_t shader) {

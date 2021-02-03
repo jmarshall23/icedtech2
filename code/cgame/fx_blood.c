@@ -66,13 +66,18 @@ void FX_RenderAddBloodElements(localEntity_t* le) {
 //			return;
 //		}
 
+		if (trace.entityNum == ENTITYNUM_WORLD) {
+			CG_FreeLocalEntity(le);
+			return;
+		}
+
 		if (trace.fraction < 1.0) {
 			// reflect the velocity on the trace plane
 			CG_ReflectVelocity(le, &trace);
-			if (VectorLengthSquared(le->pos.trDelta) < SQR(1)) {
-				CG_FreeLocalEntity(le);
-				return;
-			}
+			//if (VectorLengthSquared(le->pos.trDelta) < SQR(1)) {
+			//	CG_FreeLocalEntity(le);
+			//	return;
+			//}
 			// the intersection is a fraction of the frametime
 			le->pos.trTime = t;
 		}

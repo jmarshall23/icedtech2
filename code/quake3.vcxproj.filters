@@ -1,284 +1,489 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{f4c85717-eb42-4325-8c3e-3a678f27d988}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
+    <Filter Include="Client">
+      <UniqueIdentifier>{c2122652-8ead-4838-8fcf-43f8784a2d31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{7c1c122f-79c7-4dc2-bbeb-09f2081868bc}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;fi;fd</Extensions>
+    <Filter Include="UI">
+      <UniqueIdentifier>{e3e7fe28-669c-442d-ab11-4b7679b2c531}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="CM">
+      <UniqueIdentifier>{ddc507c3-c608-42a9-a92a-62c6715f9261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{3b1d8e80-d726-45a6-9c66-8b4c5d20322e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{a05a8308-03a2-4740-8a35-cb4e4a01ba95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{d9b13f4d-6249-4807-a888-e3dd51b5fdfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{52f38205-8d95-42dd-8be9-e617fcbf5e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32\Resource Files">
       <UniqueIdentifier>{9b4f1ea3-a8a4-4390-a5a4-b7add26d2d9c}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{9927771b-c091-42f4-8472-bf368f6e170b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracing">
+      <UniqueIdentifier>{20e4df01-ce05-46d8-a209-501eea8be04c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracing\math">
+      <UniqueIdentifier>{ffc18225-0830-408e-8086-77b52fb8706f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracing\libs">
+      <UniqueIdentifier>{3267ee82-ede7-4cad-9cea-8efc0f9c6b3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracing\libs\xml">
+      <UniqueIdentifier>{d613de2d-6af6-44ab-b54a-1d2bef4ffab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracing\d3d12">
+      <UniqueIdentifier>{bb75d4e1-f246-4acd-ba98-5a71426261f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Raytracing\d3d12\nv_helpers_dx12">
+      <UniqueIdentifier>{0653b8d0-d6fc-47ba-b7b0-4598f0e1ac86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="client\cl_ui.c">
+      <Filter>Client</Filter>
+    </ClCompile>
     <ClCompile Include="client\cl_cgame.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_cin.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_console.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_input.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_keys.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_main.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_net_chan.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_parse.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_scrn.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="client\cl_ui.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cm_load.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cm_patch.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cm_polylib.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cm_test.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cm_trace.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cmd.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\common.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\cvar.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\files.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\huffman.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\md4.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\msg.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\net_chan.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_ccmds.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_client.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_game.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_init.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_net_chan.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_snapshot.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="server\sv_world.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="qcommon\unzip.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_input.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_net.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_shared.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_syscon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32\win_wndproc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\qal.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_adpcm.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_altivec.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_codec.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_codec_wav.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_dma.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_mem.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_mix.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_openal.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound\snd_wavelet.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_atoms.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_gameinfo.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_players.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_shared.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_syscalls.c">
-      <Filter>Source Files</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="ui\ui_util.c">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="gameshared\q_math.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ui\ui_atoms.c">
+      <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="gameshared\q_shared.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ui\ui_gameinfo.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_main.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_players.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_shared.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_syscalls.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_trace.c">
+      <Filter>CM</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_load.c">
+      <Filter>CM</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_patch.c">
+      <Filter>CM</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_polylib.c">
+      <Filter>CM</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cm_test.c">
+      <Filter>CM</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cmd.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\common.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\cvar.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\files.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\huffman.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\md4.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\msg.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\net_chan.c">
+      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="gameshared\q_files.c">
-      <Filter>Source Files</Filter>
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="gameshared\q_math.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="gameshared\q_shared.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="qcommon\unzip.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\qal.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_adpcm.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_altivec.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_codec.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_codec_wav.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_dma.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_main.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_mem.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_mix.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_openal.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\snd_wavelet.c">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_ccmds.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_client.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_game.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_init.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_main.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_net_chan.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_snapshot.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\sv_world.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_wndproc.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_input.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_main.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_net.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_shared.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_syscon.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_gamma.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_glimp.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32\win_qgl.c">
+      <Filter>Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_animation.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_backend.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_bsp.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_cmds.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_curve.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_flares.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_font.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_image.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_init.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_light.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_main.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_marks.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_mesh.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_model.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_noise.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_scene.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_shade.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_shade_calc.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_shader.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_shadows.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_sky.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_surface.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\tr_world.c">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\math\matrix.cpp">
+      <Filter>Raytracing\math</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\libs\xml\tinyxml2.cpp">
+      <Filter>Raytracing\libs\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_clear.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_composite.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_main.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_raytrace_cleanup.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_raytrace_entities.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_raytrace_lights.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_raytrace_mega.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_raytrace_mesh.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\d3d12_ui.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\ImagePacker.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\tinydx.cpp">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\nv_helpers_dx12\BottomLevelASGenerator.cpp">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\nv_helpers_dx12\RaytracingPipelineGenerator.cpp">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\nv_helpers_dx12\RootSignatureGenerator.cpp">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\nv_helpers_dx12\ShaderBindingTableGenerator.cpp">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="raytracing\d3d12\nv_helpers_dx12\TopLevelASGenerator.cpp">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game\bg_public.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="client\client.h">
+      <Filter>Client</Filter>
     </ClInclude>
     <ClInclude Include="cgame\cg_public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="client\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\cm_local.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\cm_patch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\cm_polylib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\cm_public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\g_public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\keycodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="client\keys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\qcommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\qfiles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\qgl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32\resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="server\server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game\surfaceflags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\tr_local.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\tr_public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cgame\tr_types.h">
-      <Filter>Header Files</Filter>
+      <Filter>Client</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_public.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="qcommon\unzip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32\win_local.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sound\snd_local.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sound\snd_public.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_local.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_public.h">
+      <Filter>CM</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_local.h">
+      <Filter>CM</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_patch.h">
+      <Filter>CM</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\cm_polylib.h">
+      <Filter>CM</Filter>
+    </ClInclude>
+    <ClInclude Include="client\keys.h">
+      <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\keycodes.h">
+      <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\qcommon.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\qfiles.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\snd_public.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\snd_local.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="qcommon\unzip.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="server\server.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="win32\win_local.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="win32\resource.h">
+      <Filter>Win32\Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game\g_public.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="game\bg_public.h">
+      <Filter>Server</Filter>
     </ClInclude>
     <ClInclude Include="gameshared\q_shared.h">
-      <Filter>Header Files</Filter>
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="cgame\tr_types.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\qgl.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="game\surfaceflags.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\tr_local.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\tr_public.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\math\vectormath.h">
+      <Filter>Raytracing\math</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\libs\xml\tinyxml2.h">
+      <Filter>Raytracing\libs\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\d3d12_local.h">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\d3dx12.h">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\DXRHelper.h">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\DXSampleHelper.h">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\ImagePacker.h">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\tinydx.h">
+      <Filter>Raytracing\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\nv_helpers_dx12\BottomLevelASGenerator.h">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\nv_helpers_dx12\RaytracingPipelineGenerator.h">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\nv_helpers_dx12\RootSignatureGenerator.h">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\nv_helpers_dx12\ShaderBindingTableGenerator.h">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="raytracing\d3d12\nv_helpers_dx12\TopLevelASGenerator.h">
+      <Filter>Raytracing\d3d12\nv_helpers_dx12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="win32\cursor2.cur">
-      <Filter>Resource Files</Filter>
+      <Filter>Win32\Resource Files</Filter>
     </None>
     <None Include="win32\cursor3.cur">
-      <Filter>Resource Files</Filter>
+      <Filter>Win32\Resource Files</Filter>
     </None>
     <None Include="unix\ChangeLog" />
     <None Include="unix\Conscript-pk3" />
@@ -286,12 +491,17 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="win32\qe3.ico">
-      <Filter>Resource Files</Filter>
+      <Filter>Win32\Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="win32\winquake.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>Win32\Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="raytracing\libs\dxcompiler.lib">
+      <Filter>Raytracing\libs</Filter>
+    </Library>
   </ItemGroup>
 </Project>

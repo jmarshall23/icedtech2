@@ -474,18 +474,17 @@ MATHLIB
 ==============================================================
 */
 
-#if !defined(__cplusplus) && defined(GAMESDK)
+#if !defined(GENERATED_SUPERSCRIPT)
 typedef float vec_t;
 typedef vec_t vec2_t[2];
 typedef vec_t vec3_t[3];
 typedef vec_t vec4_t[4];
 typedef vec_t vec5_t[5];
-#elif !defined(GAMESDK)
-typedef float vec_t;
-typedef vec_t vec2_t[2];
-typedef vec_t vec3_t[3];
-typedef vec_t vec4_t[4];
-typedef vec_t vec5_t[5];
+#else
+#undef SnapVector
+#define vec3_t idVec3_t
+#define vec2_t idVec2_t
+#define vec_t float
 #endif
 
 typedef	int	fixed4_t;
@@ -780,7 +779,7 @@ void MakeNormalVectors( const vec3_t forward, vec3_t right, vec3_t up );
 
 void MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
 #ifdef __cplusplus
-void AngleVectors(const vec3_t angles, vec3_t &forward, vec3_t &right, vec3_t &up);
+void AngleVectors(const vec3_t angles, float *forward, float *right, float *up);
 #else
 void AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
 #endif
@@ -1655,5 +1654,13 @@ typedef enum {
 typedef struct {
 	fogType_t fogType;
 } fogInfo_t;
+
+#ifndef min
+	#define min(a,b) (((a)<(b))?(a):(b))
+#endif
+
+#ifndef max
+	#define max(a,b) (((a)>(b))?(a):(b))
+#endif
 
 #endif	// __Q_SHARED_H

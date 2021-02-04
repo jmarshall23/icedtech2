@@ -4,13 +4,12 @@
 // 
 
 #define GENERATED_SUPERSCRIPT 1
+#include "../../splines/math_vector.h"
 #include "../../game/g_local.h "
 #include "../superscript.h"
-extern "C" {
 	#include "generated_dog.h"
 
 #include "save_func.h"
-};
 
 void dog_bite(gentity_t *self) {
 

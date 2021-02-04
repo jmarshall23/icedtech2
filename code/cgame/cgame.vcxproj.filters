@@ -11,73 +11,73 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cg_consolecmds.c">
+    <ClCompile Include="cg_consolecmds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_ents.c">
+    <ClCompile Include="cg_ents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_event.c">
+    <ClCompile Include="cg_event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_info.c">
+    <ClCompile Include="cg_hud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_localents.c">
+    <ClCompile Include="cg_info.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_main.c">
+    <ClCompile Include="cg_localents.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_marks.c">
+    <ClCompile Include="cg_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_players.c">
+    <ClCompile Include="cg_marks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_playerstate.c">
+    <ClCompile Include="cg_monster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_predict.c">
+    <ClCompile Include="cg_players.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_servercmds.c">
+    <ClCompile Include="cg_playerstate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_snapshot.c">
+    <ClCompile Include="cg_predict.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_view.c">
+    <ClCompile Include="cg_servercmds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_weapons.c">
+    <ClCompile Include="cg_snapshot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_sprite.c">
+    <ClCompile Include="cg_sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_hud.c">
+    <ClCompile Include="cg_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fx_particles.c">
+    <ClCompile Include="cg_weapons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fx_debris.c">
+    <ClCompile Include="fx_beam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fx_explode.c">
+    <ClCompile Include="fx_blood.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fx_beam.c">
+    <ClCompile Include="fx_debris.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fx_gibs.c">
+    <ClCompile Include="fx_explode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_monster.c">
+    <ClCompile Include="fx_gibs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fx_blood.c">
+    <ClCompile Include="fx_particles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

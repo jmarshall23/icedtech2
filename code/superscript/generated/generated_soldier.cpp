@@ -4,13 +4,12 @@
 // 
 
 #define GENERATED_SUPERSCRIPT 1
+#include "../../splines/math_vector.h"
 #include "../../game/g_local.h "
 #include "../superscript.h"
-extern "C" {
 	#include "generated_soldier.h"
 
 #include "save_func.h"
-};
 
 void army_stand1(gentity_t *self) {
 	static mframe_t frame = { ai_stand,0, NULL };

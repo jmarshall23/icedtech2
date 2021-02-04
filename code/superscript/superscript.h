@@ -90,10 +90,10 @@ __forceinline void SpawnGib(gentity_t *self) {
 	G_TempEntity(self->r.currentOrigin, EV_NEW_GIBS);
 }
 
-extern "C" {
-	extern float g_damage;
-	void G_SendAnimUpdate(gentity_t* self, animEventType_t eventType, int startFrame, int endFrame);
-}
+
+extern float g_damage;
+void G_SendAnimUpdate(gentity_t* self, animEventType_t eventType, int startFrame, int endFrame);
+
 
 #define TRUE 1.0f
 #define FALSE 0.0f

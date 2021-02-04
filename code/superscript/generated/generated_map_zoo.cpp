@@ -4,13 +4,12 @@
 // 
 
 #define GENERATED_SUPERSCRIPT 1
+#include "../../splines/math_vector.h"
 #include "../../game/g_local.h "
 #include "../superscript.h"
-extern "C" {
 	#include "generated_map_zoo.h"
 
 #include "save_func.h"
-};
 static float message_count = 0;
 static gentity_t * spawned_army_entity = 0;
 

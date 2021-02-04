@@ -23,20 +23,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // g_local.h -- local definitions for game module
 
 #ifdef __cplusplus
-#include "../splines/math_vector.h"
-#undef SnapVector
-#define vec3_t idVec3_t
-#define vec2_t idVec2_t
-#define vec_t float
-#endif
-
-#ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "../gameshared/q_shared.h"
 #include "../gameshared/bg_public.h"
 #include "g_public.h"
+
+#define vec_zero NULL
 
 //==================================================================
 
@@ -350,7 +344,7 @@ struct gentity_s {
 	int			max_health;
 	int			gib_health;
 	int			deadflag;
-	qboolean	show_hostile;
+	int			show_hostile;
 	qboolean	isGibbed;
 
 	int			viewheight;		// height above origin where eyesight is determined
@@ -1141,7 +1135,7 @@ gentity_t* PlayerTrail_LastSpot(void);
 // g_weapon.c
 //
 void Bullet_Fire(gentity_t* ent, float spread, int damage);
-void ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, gentity_t* ent);
+void ShotgunPattern(int count, float spreadx, float spready, vec3_t origin, vec3_t origin2, int seed, gentity_t* ent);
 gentity_t* fire_rocket(gentity_t* self, vec3_t start, vec3_t dir);
 
 typedef enum
@@ -1217,6 +1211,13 @@ void G_LoadGame(const char* name);
 void G_SaveGame(const char* name);
 
 extern gameImport_t* engine;
+
+qboolean visible(gentity_t* self, gentity_t* other);
+void SetMoverState(gentity_t* ent, moverState_t moverState, int time);
+
+qboolean G_CallSpawn(gentity_t* ent);
+
+void AI_SetSightClient(void);
 
 #ifdef __cplusplus
 }

@@ -4,13 +4,12 @@
 // 
 
 #define GENERATED_SUPERSCRIPT 1
+#include "../../splines/math_vector.h"
 #include "../../game/g_local.h "
 #include "../superscript.h"
-extern "C" {
 	#include "generated_zombie.h"
 
 #include "save_func.h"
-};
 static float inpain = 0;
 
 void zombie_stand1(gentity_t *self) {

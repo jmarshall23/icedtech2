@@ -122,12 +122,13 @@ namespace QuakeToC
 
             text += "#define GENERATED_SUPERSCRIPT 1\n";
 
+            text += "#include \"../../splines/math_vector.h\"\n";
             text += "#include \"../../game/g_local.h \"\n";            
             text += "#include \"../superscript.h\"\n";
-            text += "extern \"C\" {\n";
+            //text += "extern \"C\" {\n";
             text += "\t#include \"" + header + "\"\n\n";
             text += "#include \"save_func.h\"\n";
-            text += "};\n";
+            //text += "};\n";
 
             foreach (QCfile.Variable v in qc.globalVariables)
             {

@@ -20,10 +20,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 //
+
+extern "C" {
 #include "../gameshared/q_shared.h"
 #include "../renderer/tr_public.h"
 #include "../gameshared/bg_public.h"
 #include "cg_public.h"
+};
 
 
 // The entire cgame module is unloaded and reloaded on each level change,
@@ -1324,7 +1327,7 @@ sfxHandle_t	CG_CustomSound( int clientNum, const char *soundName );
 //
 void CG_BuildSolidList( void );
 int	CG_PointContents( const vec3_t point, int passEntityNum );
-void CG_Trace( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, 
+void CG_Trace( trace_t *result, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, 
 					 int skipNumber, int mask );
 void CG_PredictPlayerState( void );
 void CG_LoadDeferredPlayers( void );
@@ -1382,12 +1385,10 @@ void CG_OutOfAmmoChange( void );	// should this be in pmove?
 //
 void	CG_InitMarkPolys( void );
 void	CG_AddMarks( void );
-void	CG_ImpactMark( qhandle_t markShader, 
-				    const vec3_t origin, const vec3_t dir, 
-					float orientation, 
-				    float r, float g, float b, float a, 
-					qboolean alphaFade, 
-					float radius, qboolean temporary );
+
+void CG_ImpactMark(qhandle_t markShader, const vec3_t origin, const vec3_t dir,
+	float orientation, float red, float green, float blue, float alpha,
+	qboolean alphaFade, float radius, qboolean temporary, int duration);
 
 //
 // cg_localents.c
@@ -1494,7 +1495,7 @@ void	CG_ParticleBulletDebris (vec3_t	org, vec3_t vel, int duration);
 void	CG_ParticleSparks (vec3_t org, vec3_t vel, int duration, float x, float y, float speed);
 void	CG_ParticleDust (centity_t *cent, vec3_t origin, vec3_t dir);
 void	CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, float alpha);
-void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duration, int sizeStart, int sizeEnd);
+void CG_ParticleExplosion(char* animStr, vec3_t origin, vec3_t vel, int duration, int sizeStart, int sizeEnd, qboolean dlight);
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
 
@@ -1539,5 +1540,12 @@ void FX_RenderAddBloodElements(localEntity_t* le);
 #define LS_FRAMETIME 100 // (ms)  cycle through lightstyle characters at 10fps
 
 
+extern "C" {
+	void trap_DrawBigString(int x, int y, const char* s, float alpha);
+	// Don't use these outside of q_shared, these need to become deprecated asap!
+	void	trap_FS_Read(void* buffer, int len, fileHandle_t f);
+	void	trap_FS_Write(const void* buffer, int len, fileHandle_t f);
+	void trap_SnapVector(float* v);
+};
 
 extern cgameImport_t* engine;

@@ -15,91 +15,91 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="g_active.c">
+    <ClCompile Include="g_active.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_client.c">
+    <ClCompile Include="g_ai.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_cmds.c">
+    <ClCompile Include="g_button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_combat.c">
+    <ClCompile Include="g_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_items.c">
+    <ClCompile Include="g_cmds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_main.c">
+    <ClCompile Include="g_combat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_mem.c">
+    <ClCompile Include="p_trail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_misc.c">
+    <ClCompile Include="m_move.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_missile.c">
+    <ClCompile Include="g_worldspawn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_mover.c">
+    <ClCompile Include="g_weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_session.c">
+    <ClCompile Include="g_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_spawn.c">
+    <ClCompile Include="g_trigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_svcmds.c">
+    <ClCompile Include="g_train.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_target.c">
+    <ClCompile Include="g_target.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_trigger.c">
+    <ClCompile Include="g_svcmds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_utils.c">
+    <ClCompile Include="g_spawn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_weapon.c">
+    <ClCompile Include="g_session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_ai.c">
+    <ClCompile Include="g_save.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="p_trail.c">
+    <ClCompile Include="g_platform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_monster.c">
+    <ClCompile Include="g_mover.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="m_move.c">
+    <ClCompile Include="g_monster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_door.c">
+    <ClCompile Include="g_missile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_light.c">
+    <ClCompile Include="g_misc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_cvar.c">
+    <ClCompile Include="g_mem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_save.c">
+    <ClCompile Include="g_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_button.c">
+    <ClCompile Include="g_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_platform.c">
+    <ClCompile Include="g_items.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_train.c">
+    <ClCompile Include="g_cvar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_worldspawn.c">
+    <ClCompile Include="g_door.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

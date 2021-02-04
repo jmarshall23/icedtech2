@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define	LL(x) x=LittleLong(x)
 
-static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *name );
+static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *name, qboolean fastLoad);
 static qboolean R_LoadMD4 (model_t *mod, void *buffer, const char *name );
 
 model_t	*loadmodel;
@@ -66,6 +66,40 @@ model_t *R_AllocModel( void ) {
 	tr.numModels++;
 
 	return mod;
+}
+/*
+=============
+RE_GetModelBounds
+
+This function can get very very expensive, since it loads in the model, unloads everything,
+but we don't cache the result on our side, so the caller should build up a table it maintains,
+to cache this information.
+
+We do it this way so the server can still run headless.
+=============
+*/
+qboolean RE_GetModelBounds(const char* filename, vec3_t mins, vec3_t maxs) {
+	model_t model;
+	void* buf;
+
+	ri.FS_ReadFile(filename, (void**)&buf);
+	if (!buf) {
+		ri.Printf(PRINT_WARNING, "RE_GetModelBounds: couldn't load %s\n", filename);
+		return qfalse;
+	}
+
+	if (!R_LoadMD3(&model, 0, buf, filename, qtrue)) {
+		return qfalse;
+	}
+
+	md3Frame_t * frame = (md3Frame_t*)((byte*)model.md3[0] + model.md3[0]->ofsFrames);
+
+	VectorCopy(frame->bounds[0], mins);
+	VectorCopy(frame->bounds[1], maxs);
+
+	free(model.md3[0]);
+
+	return qtrue;
 }
 
 /*
@@ -229,7 +263,7 @@ qhandle_t RE_RegisterModelEx(const char* name, const char* _fileName, qhandle_t 
 			return 0;
 		}
 
-		loaded = R_LoadMD3(mod, 0, buf, _fileName);
+		loaded = R_LoadMD3(mod, 0, buf, _fileName, qfalse);
 	}
 
 	mod->numLods++;
@@ -270,7 +304,7 @@ qhandle_t RE_RegisterModel( const char *name ) {
 R_LoadMD3
 =================
 */
-static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *mod_name ) {
+static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *mod_name, qboolean fastLoad ) {
 	int					i, j;
 	md3Header_t			*pinmodel;
     md3Frame_t			*frame;
@@ -297,7 +331,15 @@ static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *mod_
 	mod->type = MOD_MESH;
 	size = LittleLong(pinmodel->ofsEnd);
 	mod->dataSize += size;
-	mod->md3[lod] = ri.Hunk_Alloc( size, h_low );
+
+	if (fastLoad)
+	{
+		mod->md3[lod] = malloc(size);
+	}
+	else
+	{
+		mod->md3[lod] = ri.Hunk_Alloc(size, h_low);
+	}
 
 	Com_Memcpy (mod->md3[lod], buffer, LittleLong(pinmodel->ofsEnd) );
 
@@ -383,28 +425,33 @@ static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *mod_
         // register the shaders
         shader = (md3Shader_t *) ( (byte *)surf + surf->ofsShaders );
         for ( j = 0 ; j < surf->numShaders ; j++, shader++ ) {
-            shader_t	*sh;
 
-            sh = R_FindShader( shader->name, LIGHTMAP_NONE, qtrue );
-
-			if (globalCustomShader != -1)
+			if (!fastLoad)
 			{
-				shader->shaderIndex = globalCustomShader;
-			}
-			else if ( sh->defaultShader ) {
-				if (!defaultShader->defaultShader)
+				shader_t* sh;
+
+				sh = R_FindShader(shader->name, LIGHTMAP_NONE, qtrue);
+
+				if (globalCustomShader != -1)
 				{
-					shader->shaderIndex = defaultShader->index;
-				}				
-				else
-				{
-					COM_StripExtension(mod_name, shaderName);
-					COM_DefaultExtension(shaderName, sizeof(shaderName), va("_%d.tga", i));
-					defaultShader = R_FindShader(shaderName, -1, qfalse);
-					shader->shaderIndex = defaultShader->index;
+					shader->shaderIndex = globalCustomShader;
 				}
-			} else {
-				shader->shaderIndex = sh->index;
+				else if (sh->defaultShader) {
+					if (!defaultShader->defaultShader)
+					{
+						shader->shaderIndex = defaultShader->index;
+					}
+					else
+					{
+						COM_StripExtension(mod_name, shaderName);
+						COM_DefaultExtension(shaderName, sizeof(shaderName), va("_%d.tga", i));
+						defaultShader = R_FindShader(shaderName, -1, qfalse);
+						shader->shaderIndex = defaultShader->index;
+					}
+				}
+				else {
+					shader->shaderIndex = sh->index;
+				}
 			}
         }
 
@@ -439,8 +486,11 @@ static qboolean R_LoadMD3 (model_t *mod, int lod, void *buffer, const char *mod_
 		surf = (md3Surface_t *)( (byte *)surf + surf->ofsEnd );
 	}
 
-	for (int i = 0; i < mod->md3[lod]->numFrames; i++) {
-		mod->dxrMesh[i] = GL_LoadMD3RaytracedMesh(mod->md3[lod], i);
+	if (!fastLoad)
+	{
+		for (int i = 0; i < mod->md3[lod]->numFrames; i++) {
+			mod->dxrMesh[i] = GL_LoadMD3RaytracedMesh(mod->md3[lod], i);
+		}
 	}
     
 	return qtrue;

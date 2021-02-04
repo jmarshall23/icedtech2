@@ -31,6 +31,10 @@ char saveGameName[512];
 
 PlayerPersistant_t playerPersistant;
 
+qboolean SV_GetModelBounds(const char* filename, vec3_t mins, vec3_t maxs) {
+	return RE_GetModelBounds(filename, mins, maxs);
+}
+
 qhandle_t	SV_OpenSaveForWrite(const char* name) {
 	const char* fileName = va("savegames/%s.sav", name);
 
@@ -371,6 +375,7 @@ void SV_BuildGameImport(gameImport_t* engineApi) {
 	GAME_BIND_FUNCTION(SV_EntityContact);
 	//GAME_BIND_FUNCTION(SV_Trace);
 	engineApi->SV_Trace = SV_Trace2;
+	GAME_BIND_FUNCTION(SV_GetModelBounds);
 	GAME_BIND_FUNCTION(SV_TraceCapsule);
 	GAME_BIND_FUNCTION(SV_GetPersistant);
 	GAME_BIND_FUNCTION(SV_SetPersistant);

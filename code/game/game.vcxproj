@@ -374,6 +374,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;GLOBALRANK</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WIN32;NDEBUG;_WINDOWS;GLOBALRANK</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="g_newmath.cpp" />
     <ClCompile Include="g_platform.cpp" />
     <ClCompile Include="g_save.cpp" />
     <ClCompile Include="g_session.cpp">

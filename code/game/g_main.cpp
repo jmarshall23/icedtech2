@@ -30,6 +30,9 @@ gameImport_t*	engine;
 gentity_t		g_entities[MAX_GENTITIES];
 gclient_t		g_clients[MAX_CLIENTS];
 
+int g_numModelsInCache = 0;
+gameModelCacheEntry_t g_ModelCache[1024];
+
 void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
 void G_ShutdownGame( int restart );
@@ -1482,3 +1485,27 @@ extern "C" {
 		engine->Sys_SnapVector(v);
 	}
 };
+
+gameModelCacheEntry_t* G_LoadModel(char* fileName) {
+	gameModelCacheEntry_t* cacheEntry = NULL;
+	unsigned int hash = MurmurOAAT32(fileName);
+
+	for (int i = 0; i < g_numModelsInCache; i++)
+	{
+		if (g_ModelCache[i].hash == hash) {
+			return &g_ModelCache[i];
+		}
+	}
+
+	cacheEntry = &g_ModelCache[g_numModelsInCache];
+	if (!engine->SV_GetModelBounds(fileName, cacheEntry->mins, cacheEntry->maxs)) {
+		return NULL;
+	}
+
+	cacheEntry->hash = hash;
+	cacheEntry->modelIndex = G_ModelIndex(fileName);
+
+	g_numModelsInCache++;
+
+	return cacheEntry;
+}

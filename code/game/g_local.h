@@ -1219,6 +1219,20 @@ qboolean G_CallSpawn(gentity_t* ent);
 
 void AI_SetSightClient(void);
 
+//
+// gameModelCacheEntry_t
+//
+struct gameModelCacheEntry_t {
+	unsigned int hash;
+	int modelIndex;
+	vec3_t mins;
+	vec3_t maxs;
+};
+
+gameModelCacheEntry_t* G_LoadModel(char* fileName);
+
 #ifdef __cplusplus
 }
 #endif
+
+void RotateBounds(float* mins, float* maxs, float* angle);

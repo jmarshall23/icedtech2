@@ -404,3 +404,5 @@ qboolean SV_Netchan_Process( client_t *client, msg_t *msg );
 qhandle_t	SV_OpenSave(const char* name);
 
 extern PlayerPersistant_t playerPersistant;
+
+qboolean RE_GetModelBounds(const char* filename, vec3_t mins, vec3_t maxs);

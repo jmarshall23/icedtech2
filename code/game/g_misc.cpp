@@ -171,9 +171,19 @@ void SP_misc_teleporter_dest( gentity_t *ent ) {
 "model"		arbitrary .md3 file to display
 */
 void SP_misc_model( gentity_t *ent ) {
-	ent->s.modelindex = G_ModelIndex( ent->model );
-	VectorSet (ent->r.mins, -16, -16, -16);
-	VectorSet (ent->r.maxs, 16, 16, 16);
+	gameModelCacheEntry_t* cache = G_LoadModel(ent->model);
+	if (!cache) {
+		G_FreeEntity(ent);
+		return;
+	}
+
+	ent->s.modelindex = cache->modelIndex;
+	ent->r.contents = CONTENTS_SOLID;
+	VectorCopy(cache->mins, ent->r.mins);
+	VectorCopy(cache->maxs, ent->r.maxs);	
+
+	RotateBounds(ent->r.mins, ent->r.maxs, ent->s.angles);
+
 	engine->SV_LinkEntity (ent);
 
 	G_SetOrigin( ent, ent->s.origin );

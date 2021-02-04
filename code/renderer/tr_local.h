@@ -1203,6 +1203,7 @@ void		RE_SetWorldVisData( const byte *vis );
 qhandle_t	RE_RegisterModel( const char *name );
 qhandle_t	RE_RegisterModelEx(const char* name, const char* _fileName, qhandle_t globalShader);
 qhandle_t	RE_RegisterCustomModel(const char* name, qhandle_t shader, polyVert_t* verts, int numVertexes);
+qboolean RE_GetModelBounds(const char* filename, vec3_t mins, vec3_t maxs);
 qhandle_t	RE_RegisterSkin( const char *name );
 void		RE_Shutdown( qboolean destroyWindow );
 int			RE_ModelNumFrames(qhandle_t handle);

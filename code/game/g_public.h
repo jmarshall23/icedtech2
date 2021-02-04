@@ -155,6 +155,7 @@ typedef struct {
 	void	 (*SV_AdjustAreaPortalState)(sharedEntity_t* ent, qboolean open);	
 	void	 (*SV_GetUsercmd)(int clientNum, usercmd_t* cmd);
 	qboolean (*SV_GetEntityToken)(char* buffer, int bufferSize);
+	qboolean (*SV_GetModelBounds)(const char* filename, vec3_t mins, vec3_t maxs);
 
 	// Common
 	void	(*Com_Error)(int level, const char* error, ...);
